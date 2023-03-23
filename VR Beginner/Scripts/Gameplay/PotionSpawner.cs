@@ -19,8 +19,11 @@ public class PotionSpawner : MonoBehaviour
     {
         if (recipe != null)
         {
-            Quiz quiz = quizManager.GetComponent<Quiz>();
-            quiz.NotifyRightAns(1);
+            /*Quiz quiz = quizManager.GetComponent<Quiz>();
+            quiz.SetQuestionOne(true);
+            quiz.NotifyRightAns(1);*/
+            Quiz.Instance.SetQuestionOne(true);
+            Quiz.Instance.NotifyRightAns(1);
             SpawnerCorrect.Prefab = PotionPrefab;
             SpawnerCorrect.enabled = true;
             SpawnerCorrect.Spawn();

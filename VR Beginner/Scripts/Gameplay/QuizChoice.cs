@@ -21,7 +21,11 @@ public class QuizChoice: MonoBehaviour
         if (problemOne)
         {
             if (rightAns)
-                Quiz.Instance.NotifyRightAns(roundOne ? 0:1, false);
+            {
+                Quiz.Instance.questionOne = false;
+                Quiz.Instance.NotifyRightAns(roundOne ? 0:1);
+            }
+            
         }
         else
         {
