@@ -13,6 +13,7 @@ public class PotionSpawner : MonoBehaviour
     public ObjectSpawner SpawnerCorrect;
     public ObjectSpawner SpawnerIncorrect;
     public GameObject quizManager;
+    
 
     public void PotionBrewed(CauldronContent.Recipe recipe)
     {
