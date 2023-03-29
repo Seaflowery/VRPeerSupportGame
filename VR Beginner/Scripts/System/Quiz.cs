@@ -8,6 +8,10 @@ public class Quiz: MonoBehaviour
     public GameObject[] quizChoice = new GameObject[ChoiceNum];
     public int rightAns = 0;
     public bool questionOne;
+    public Texture2D[] questionTextures = new Texture2D[4];
+    public Texture2D[] answerTextures = new Texture2D[4];
+    public Material questionMaterial;
+    public Material answerMaterial;
     public static Quiz Instance;
 
     private void Awake()
@@ -24,9 +28,22 @@ public class Quiz: MonoBehaviour
     {
         // TODO: select quiz questions and get right answer 
         if (!questionOne)
-            rightAns = (round == 0) ? 1 : 2;
+        {
+            rightAns = (round == 0) ? 1 : 3;
+            int seq = (round == 0) ? 1 : 3;
+            questionMaterial.mainTexture = questionTextures[seq];
+            questionMaterial.SetTexture("_EmissionMap", questionTextures[seq]);
+            answerMaterial.mainTexture = answerTextures[seq];
+        }
         else
-            rightAns = (round == 0) ? 0 : 3;
+        {
+            rightAns = 2;
+            int seq = (round == 0) ? 0 : 2;
+            questionMaterial.mainTexture = questionTextures[seq];
+            questionMaterial.SetTexture("_EmissionMap", questionTextures[seq]);
+            answerMaterial.mainTexture = answerTextures[seq];
+
+        }
     }
 
     public void NotifyRightAns(int round)
