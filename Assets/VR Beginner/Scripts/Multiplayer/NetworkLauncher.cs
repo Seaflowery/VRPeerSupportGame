@@ -4,9 +4,14 @@ using Mirror;
 
 public class NetworkLauncher: NetworkManager
 {
+    public GameObject syncObject;
+    public AudioSource qwq;
     public override void OnStartServer()
     {
         Debug.Log("get started server");
+        NetworkServer.Spawn(syncObject);
+        qwq.Play();
+        Debug.Log("succeed!!!");
     }
 
     public override void OnStopServer()
