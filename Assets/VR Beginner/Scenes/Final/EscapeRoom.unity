@@ -889,8 +889,8 @@ GameObject:
   m_Component:
   - component: {fileID: 85328927}
   - component: {fileID: 85328926}
-  - component: {fileID: 85328928}
   - component: {fileID: 85328929}
+  - component: {fileID: 85328928}
   m_Layer: 0
   m_Name: NetworkLauncher
   m_TagString: Untagged
@@ -918,7 +918,7 @@ MonoBehaviour:
   offlineScene: Assets/VR Beginner/Scenes/Final/EscapeRoom.unity
   onlineScene: Assets/VR Beginner/Scenes/Final/EscapeRoom.unity
   transport: {fileID: 85328929}
-  networkAddress: localhost
+  networkAddress: 172.25.109.195
   maxConnections: 2
   authenticator: {fileID: 0}
   playerPrefab: {fileID: 0}

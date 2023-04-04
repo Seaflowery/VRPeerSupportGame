@@ -10,7 +10,6 @@ public class NetworkLauncher: NetworkManager
     {
         Debug.Log("get started server");
         NetworkServer.Spawn(syncObject);
-        qwq.Play();
         Debug.Log("succeed!!!");
     }
 
@@ -21,6 +20,7 @@ public class NetworkLauncher: NetworkManager
 
     public override void OnClientConnect()
     {
+        qwq.Play();
         Debug.Log("Client connect");
     }
 
