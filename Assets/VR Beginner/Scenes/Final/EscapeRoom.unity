@@ -921,7 +921,8 @@ MonoBehaviour:
   networkAddress: 172.25.109.195
   maxConnections: 2
   authenticator: {fileID: 0}
-  playerPrefab: {fileID: 0}
+  playerPrefab: {fileID: 1234575337291081341, guid: 05a1a1043460c314da6c90b8bd7cc28c,
+    type: 3}
   autoCreatePlayer: 1
   playerSpawnMethod: 0
   spawnPrefabs:

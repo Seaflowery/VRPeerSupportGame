@@ -61,8 +61,9 @@ namespace TPeople
                 {
                     GOHeads[forAUX].GetComponent<SkinnedMeshRenderer>().SetBlendShapeWeight(blendshapesnumber - 1, 0f);
                 }
-                UnityEditor.EditorApplication.isPlaying = false;
+                // UnityEditor.EditorApplication.isPlaying = false;
 
+                
                 Application.Quit();
             }
         }
