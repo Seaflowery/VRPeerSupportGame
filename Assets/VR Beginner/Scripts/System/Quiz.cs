@@ -37,7 +37,7 @@ public class Quiz: MonoBehaviour
         }
         else
         {
-            rightAns = 2;
+            rightAns = (round == 0) ? 1 : 2;
             int seq = (round == 0) ? 0 : 2;
             questionMaterial.mainTexture = questionTextures[seq];
             questionMaterial.SetTexture("_EmissionMap", questionTextures[seq]);
