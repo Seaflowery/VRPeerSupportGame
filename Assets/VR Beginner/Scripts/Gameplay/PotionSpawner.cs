@@ -1,12 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Mirror;
 
 /// <summary>
 /// PotionBrewed will be hooked to the OnBrew event of the CauldronContent in the scene, and this script will take care
 /// of dispatching the right prefab to the ObjectSpawner to make the potion spawn
 /// </summary>
-public class PotionSpawner : MonoBehaviour
+public class PotionSpawner : NetworkBehaviour
 {
     public GameObject PotionPrefab;
     public GameObject BadPotionPrefab;
@@ -19,20 +20,30 @@ public class PotionSpawner : MonoBehaviour
     {
         if (recipe != null)
         {
-            /*Quiz quiz = quizManager.GetComponent<Quiz>();
-            quiz.SetQuestionOne(true);
-            quiz.NotifyRightAns(1);*/
-            /*Quiz.Instance.SetQuestionOne(true);
-            Quiz.Instance.NotifyRightAns(1);*/
-            SpawnerCorrect.Prefab = PotionPrefab;
+            /*SpawnerCorrect.Prefab = PotionPrefab;
             SpawnerCorrect.enabled = true;
-            SpawnerCorrect.Spawn();
+            SpawnerCorrect.Spawn();*/
+            CmdSpawnPotion(PotionPrefab, SpawnerCorrect);
         }
         else
         {
-            SpawnerIncorrect.Prefab = BadPotionPrefab;
+            /*SpawnerIncorrect.Prefab = BadPotionPrefab;
             SpawnerIncorrect.enabled = true;
-            SpawnerIncorrect.Spawn();
+            SpawnerIncorrect.Spawn();*/
+            CmdSpawnPotion(BadPotionPrefab, SpawnerIncorrect);
+        }
+    }
+
+    [Command]
+    public void CmdSpawnPotion(GameObject prefab, ObjectSpawner spawner)
+    {
+        GameObject potion = Instantiate(prefab, spawner.transform.position, spawner.transform.rotation);
+        NetworkServer.Spawn(potion);
+        NetworkIdentity identity = potion.GetComponent<NetworkIdentity>();
+        NetworkConnectionToClient owner = connectionToClient as NetworkConnectionToClient;
+        if (owner != null)
+        {
+            identity.AssignClientAuthority(owner); // assign authority to owner
         }
     }
 }

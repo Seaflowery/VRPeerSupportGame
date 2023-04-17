@@ -11,6 +11,7 @@ public class NetworkLauncher: NetworkManager
     public AudioSource qwq;
     public AudioSource qaq;
     private string _IPAddress = "172.25.99.89";
+    public List<GameObject> authorizeObjects;
     
     public void OnPressStartClient()
     {
@@ -30,18 +31,10 @@ public class NetworkLauncher: NetworkManager
         base.OnServerAddPlayer(conn);
         Debug.Log("add player");
         // Assign authority to client for all networked objects spawned on the server
-        XRGrabInteractable[] grabInteractables = FindObjectsOfType<XRGrabInteractable>();
-        foreach (XRGrabInteractable grabInteractable in grabInteractables)
+        foreach (GameObject obj in authorizeObjects)
         {
-            if (grabInteractable.GetComponent<NetworkIdentity>() != null && grabInteractable.GetComponent<NetworkIdentity>().isServer)
-            {
-                // Assign authority to the client
-                NetworkIdentity identity = grabInteractable.GetComponent<NetworkIdentity>();
-                identity.AssignClientAuthority(conn);
-                Debug.Log("Authority assigned to object " + identity.netId);
-            }
+            AuthorityManager.Instance.OnStartAuthorize(conn, obj);
         }
-        Debug.Log("authority added!");
     }
 
 

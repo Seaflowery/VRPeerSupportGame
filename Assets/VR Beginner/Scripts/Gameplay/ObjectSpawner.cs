@@ -3,13 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.VFX;
+using Mirror;
 
 /// <summary>
 /// Will spawn the given prefab, either when the Spawn function is called or if a MinInstance is setup, until that
 /// amount exist in the scene. If Spawn is called when there is already MaxInstance number of object in the scene,
 /// it will destroy the oldest one to make room for the newest.
 /// </summary>
-public class ObjectSpawner : MonoBehaviour
+public class ObjectSpawner : NetworkBehaviour
 {
     public GameObject Prefab;
     public VisualEffect SpawnEffect;
@@ -27,6 +28,7 @@ public class ObjectSpawner : MonoBehaviour
     public void Spawn()
     {
         var newInst = Instantiate(Prefab, SpawnPoint.position, SpawnPoint.rotation);
+        NetworkServer.Spawn(newInst);
 
         if (m_Instances.Count >= MaxInstances)
         {

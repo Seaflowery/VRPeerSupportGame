@@ -28,7 +28,6 @@ public class ObjectLauncher : MonoBehaviour
 
     public void Activated()
     {
-        //if this is auto spawn regularly, we enable the script so the update is called.
         if (IsAutoSpawn)
         {
             enabled = true;
@@ -42,7 +41,7 @@ public class ObjectLauncher : MonoBehaviour
     {
         enabled = false;
     }
-
+    
     void Update()
     {
         if (m_LastLaunch > 0.0f)
@@ -60,8 +59,9 @@ public class ObjectLauncher : MonoBehaviour
     void Launch()
     {
         var p = m_ProjectilesPool.Dequeue();
-        p.gameObject.SetActive(true);
+        // p.gameObject.SetActive(true);
         p.transform.position = SpawnPoint.position;
+        
         p.Launched(SpawnPoint.transform.forward, this);
         
         SFXPlayer.Instance.PlaySFX(LaunchingClip, SpawnPoint.position, new SFXPlayer.PlayParameters()
@@ -70,6 +70,7 @@ public class ObjectLauncher : MonoBehaviour
             Volume = 1.0f,
             SourceID = -999
         });
+        
     }
     
     public void ReturnProjectile(ProjectileBase proj)
