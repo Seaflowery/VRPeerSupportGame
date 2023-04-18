@@ -1,0 +1,115 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4418139937784088261
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4418139937784088263}
+  - component: {fileID: 4418139937784088262}
+  - component: {fileID: 4418139937784088313}
+  - component: {fileID: 4418139937784088312}
+  m_Layer: 0
+  m_Name: NetworkLauncher
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4418139937784088263
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4418139937784088261}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4418139937784088262
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4418139937784088261}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd7aae85887e48a685c548694248a03a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dontDestroyOnLoad: 1
+  runInBackground: 1
+  autoStartServerBuild: 1
+  autoConnectClientBuild: 0
+  sendRate: 30
+  offlineScene: Assets/VR Beginner/Scenes/Final/StartRoom.unity
+  onlineScene: Assets/VR Beginner/Scenes/Final/StartRoom.unity
+  transport: {fileID: 4418139937784088313}
+  networkAddress: 172.25.99.89
+  maxConnections: 4
+  authenticator: {fileID: 0}
+  playerPrefab: {fileID: 1234575337291081341, guid: 05a1a1043460c314da6c90b8bd7cc28c,
+    type: 3}
+  autoCreatePlayer: 1
+  playerSpawnMethod: 0
+  spawnPrefabs:
+  - {fileID: 3151339645011600937, guid: 952a5982b28c6d84ead9c03fc69104c5, type: 3}
+  - {fileID: 6595633008962192718, guid: 55368765a9112f74389e5e019bb3844b, type: 3}
+  - {fileID: 5489839186461855382, guid: e023e700608d14945bb93a8eb4240b4c, type: 3}
+  - {fileID: 24254901672572159, guid: b7e389feae5750046b654451b357f33b, type: 3}
+  - {fileID: 2057296594790293765, guid: 942fad8a26445c44596b9797de96bc39, type: 3}
+  - {fileID: 582113399553199978, guid: f6777e2d71d6ba640b9cdca084dd7f7d, type: 3}
+  - {fileID: 3800336322104275752, guid: 31d9a7a8bf3e5284885375ad4726064d, type: 3}
+  - {fileID: 7713101396639640392, guid: 8ae894f3be4faf94ca4007ccb752fec3, type: 3}
+  - {fileID: 1160614441501244007, guid: c8f2b1b288a4937408386e95b4b23812, type: 3}
+  timeInterpolationGui: 0
+  authorizeObjects: []
+--- !u!114 &4418139937784088313
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4418139937784088261}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b0fecffa3f624585964b0d0eb21b18e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Port: 7777
+  DualMode: 1
+  NoDelay: 1
+  Interval: 10
+  Timeout: 10000
+  FastResend: 2
+  SendWindowSize: 4096
+  ReceiveWindowSize: 4096
+  MaxRetransmit: 40
+  MaximizeSocketBuffers: 1
+  ReliableMaxMessageSize: 298449
+  UnreliableMaxMessageSize: 1199
+  debugLog: 0
+  statisticsGUI: 0
+  statisticsLog: 0
+--- !u!114 &4418139937784088312
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4418139937784088261}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6442dc8070ceb41f094e44de0bf87274, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  offsetX: -1
+  offsetY: 1

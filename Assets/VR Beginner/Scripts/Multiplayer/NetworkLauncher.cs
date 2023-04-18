@@ -8,8 +8,6 @@ using UnityEngine.XR.Interaction.Toolkit;
 public class NetworkLauncher: NetworkManager
 {
     // public GameObject syncObject;
-    public AudioSource qwq;
-    public AudioSource qaq;
     private string _IPAddress = "172.25.99.89";
     public List<GameObject> authorizeObjects;
     
@@ -33,6 +31,7 @@ public class NetworkLauncher: NetworkManager
         // Assign authority to client for all networked objects spawned on the server
         foreach (GameObject obj in authorizeObjects)
         {
+            NetworkServer.Spawn(obj);
             AuthorityManager.Instance.OnStartAuthorize(conn, obj);
         }
     }
