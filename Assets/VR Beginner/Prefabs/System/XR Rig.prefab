@@ -973,6 +973,36 @@ MonoBehaviour:
   m_Reticle: {fileID: 2663450942975863113, guid: 2ed38cd6755f763469944dc94449ee0a,
     type: 3}
   m_StopLineAtFirstRaycastHit: 1
+--- !u!1 &1359752086415343864
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6193723814967028137}
+  m_Layer: 0
+  m_Name: StartPosition
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6193723814967028137
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1359752086415343864}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1837324663596057044}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1538552607333216203
 GameObject:
   m_ObjectHideFlags: 0
@@ -1136,6 +1166,7 @@ Transform:
   - {fileID: 1526571659549516911}
   - {fileID: 858314764}
   - {fileID: 7637474082502932776}
+  - {fileID: 6193723814967028137}
   m_Father: {fileID: 1837324664885972822}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1959,7 +1990,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DisableSetupForDebug: 0
-  StartingPosition: {fileID: 0}
+  StartingPosition: {fileID: 6193723814967028137}
   TeleporterParent: {fileID: 0}
   RightTeleportInteractor: {fileID: 3487965464052155653}
   LeftTeleportInteractor: {fileID: 2712973386093634028}

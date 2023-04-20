@@ -1,21 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine;
 using Mirror;
 using Mirror.Examples.Chat;
 using UnityEngine.XR.Interaction.Toolkit;
+using Debug = UnityEngine.Debug;
 
 public class NetworkLauncher: NetworkManager
 {
     // public GameObject syncObject;
-    private string _IPAddress = "172.25.99.89";
     public List<GameObject> authorizeObjects;
-    
-    public void OnPressStartClient()
+    public static NetworkLauncher Instance;
+
+    public override void Awake()
     {
-        networkAddress = _IPAddress;
-        singleton.StartClient();
+        base.Awake();
+        Instance = this;
     }
+
     public override void OnStartServer()
     {
         Debug.Log("get started server");

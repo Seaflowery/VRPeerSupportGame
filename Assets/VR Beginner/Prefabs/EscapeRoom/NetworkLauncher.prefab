@@ -51,9 +51,9 @@ MonoBehaviour:
   autoConnectClientBuild: 0
   sendRate: 30
   offlineScene: Assets/VR Beginner/Scenes/Final/StartRoom.unity
-  onlineScene: Assets/VR Beginner/Scenes/Final/StartRoom.unity
+  onlineScene: Assets/VR Beginner/Scenes/Final/EscapeRoom.unity
   transport: {fileID: 4418139937784088313}
-  networkAddress: 172.25.99.89
+  networkAddress: 172.25.104.69
   maxConnections: 4
   authenticator: {fileID: 0}
   playerPrefab: {fileID: 1234575337291081341, guid: 05a1a1043460c314da6c90b8bd7cc28c,

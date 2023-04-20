@@ -12,7 +12,7 @@ public class NetworkGrabbable: XROffsetGrabbable
         if (!identity.isOwned)
         {
             GameObject hoveredObject = args.interactable.gameObject;
-            identity.AssignClientAuthority(hoveredObject.GetComponent<NetworkIdentity>().connectionToClient);
+            AuthorityManager.Instance.CmdAuthorize(hoveredObject, identity);
         }
     }
 
@@ -20,9 +20,10 @@ public class NetworkGrabbable: XROffsetGrabbable
     {
         NetworkIdentity identity = GetComponent<NetworkIdentity>();
 
-        if (!identity.isOwned)
+        if (identity.isOwned)
         {
-            identity.RemoveClientAuthority();
+            AuthorityManager.Instance.CmdRemoveAuthority(identity);
         } 
     }
+
 }

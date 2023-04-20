@@ -10,8 +10,19 @@ public class AuthorityManager: NetworkBehaviour
     {
         Instance = this;
     }
-
     
+    [Command(requiresAuthority = false)]
+    public void CmdAuthorize(GameObject hoveredObject, NetworkIdentity identity)
+    { 
+        identity.AssignClientAuthority(hoveredObject.GetComponent<NetworkIdentity>().connectionToClient);
+    }
+
+    [Command(requiresAuthority = false)]
+    public void CmdRemoveAuthority(NetworkIdentity identity)
+    {
+        identity.RemoveClientAuthority();
+    }
+
 
     public void OnStartAuthorize(NetworkConnectionToClient conn, GameObject prefab)
     {
