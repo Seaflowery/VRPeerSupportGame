@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.XR;
 using UnityEngine.XR.Interaction.Toolkit;
+using Mirror;
 
 
 /// <summary>
@@ -34,49 +35,72 @@ public class AlignmentTrigger : MonoBehaviour
     public UnityEvent OnExitAligned;
 
     bool m_WasAligned = false;
+    public bool serverStarted = false;
+    
+    public static AlignmentTrigger Instance;
+    
+    void Awake()
+    {
+        Instance = this;
+    }
+
 
     // Update is called once per frame
     void Update()
     {
-        bool allMatch = true;
-
-        for (int i = 0; i < RequiredMatch.Length && allMatch; ++i)
+        if (MasterController.Instance == null || serverStarted)
         {
-            AxisMatch match = RequiredMatch[i];
-            
-            Vector3 worldLocal = transform.TransformVector(match.LocalAxis);
-            Vector3 worldExternal;
+            bool allMatch = true;
 
-
-            if (match.ExternalAxisMode == Mode.View)
+            for (int i = 0; i < RequiredMatch.Length && allMatch; ++i)
             {
-                worldExternal =  MasterController.Instance.Rig.cameraGameObject.transform.TransformVector(match.ExternalAxis);
+                AxisMatch match = RequiredMatch[i];
+            
+                Vector3 worldLocal = transform.TransformVector(match.LocalAxis);
+                Vector3 worldExternal;
+
+
+                if (match.ExternalAxisMode == Mode.View)
+                {
+                    if (MasterController.Instance == null)
+                    {
+                        worldExternal = MasterControllerLocal.Instance.Rig.cameraGameObject.transform.TransformVector(match.ExternalAxis);
+                    }
+                    else
+                    {
+                        worldExternal =  MasterController.Instance.Rig.cameraGameObject.transform.TransformVector(match.ExternalAxis);
+                    }
+                }
+                else
+                {
+                    worldExternal = match.ExternalAxis;
+                }
+                
+
+                float dot = Vector3.Dot(worldLocal, worldExternal);
+
+                allMatch &= dot > 1.0f - match.Tolerance;
+            }
+            
+            // Debug.Log("allMatch: " + allMatch + " m_WasAligned: " + m_WasAligned + "");
+
+            if (allMatch)
+            {
+                if (!m_WasAligned)
+                {
+                    OnEnterAligned.Invoke();
+                    m_WasAligned = true;
+                }
             }
             else
             {
-                worldExternal = match.ExternalAxis;
-            }
-
-            float dot = Vector3.Dot(worldLocal, worldExternal);
-
-            allMatch &= dot > 1.0f - match.Tolerance;
+                if (m_WasAligned)
+                {
+                    OnExitAligned.Invoke();
+                    m_WasAligned = false;
+                }
+            } 
         }
-
-        if (allMatch)
-        {
-            if (!m_WasAligned)
-            {
-                OnEnterAligned.Invoke();
-                m_WasAligned = true;
-            }
-        }
-        else
-        {
-            if (m_WasAligned)
-            {
-                OnExitAligned.Invoke();
-                m_WasAligned = false;
-            }
-        }
+        
     }
 }

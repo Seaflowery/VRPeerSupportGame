@@ -33,10 +33,18 @@ public class WatchScript : MonoBehaviour
     
     bool m_Loading = false;
     float m_LoadingTimer;
+    public bool serverStart = false;
+    public static WatchScript Instance;
 
-    void Start()
+    private void Awake()
     {
-        LoadingSlider.gameObject.SetActive(false);
+        Instance = this;
+    }
+
+    public void ServerStart()
+    {
+        if (LoadingSlider != null)
+            LoadingSlider.gameObject.SetActive(false);
 
         var hooks = FindObjectsOfType<IUIHook>();
         foreach (var h in hooks)
@@ -50,7 +58,7 @@ public class WatchScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (m_Loading)
+        if (m_Loading && serverStart)
         {
             m_LoadingTimer += Time.deltaTime;
             LoadingSlider.value = Mathf.Clamp01(m_LoadingTimer / LoadingTime);

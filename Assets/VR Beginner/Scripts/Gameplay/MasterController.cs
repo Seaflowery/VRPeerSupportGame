@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Mirror;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.XR;
@@ -52,6 +53,8 @@ public class MasterController : MonoBehaviour
 
     bool m_LastFrameRightEnable = false;
     bool m_LastFrameLeftEnable = false;
+    
+    public bool serverStarted = false;
 
     LayerMask m_OriginalRightMask;
     LayerMask m_OriginalLeftMask;
@@ -61,8 +64,31 @@ public class MasterController : MonoBehaviour
     void Awake()
     {
         s_Instance = this;
-        m_Rig = GetComponent<XRRig>();
        
+    }
+
+    
+    public void ServerStart()
+    {
+        m_Rig = GetComponent<XRRig>();
+        InputDeviceCharacteristics leftTrackedControllerFilter = InputDeviceCharacteristics.HeldInHand | InputDeviceCharacteristics.Left;
+        List<InputDevice> foundControllers = new List<InputDevice>();
+        
+        InputDevices.GetDevicesWithCharacteristics(leftTrackedControllerFilter, foundControllers);
+
+        if (foundControllers.Count > 0)
+            m_LeftInputDevice = foundControllers[0];
+        
+        
+        InputDeviceCharacteristics rightTrackedControllerFilter = InputDeviceCharacteristics.HeldInHand | InputDeviceCharacteristics.Right;
+
+        InputDevices.GetDevicesWithCharacteristics(rightTrackedControllerFilter, foundControllers);
+
+        if (foundControllers.Count > 0)
+            m_RightInputDevice = foundControllers[0];
+
+        if (m_Rig.currentTrackingOriginMode != TrackingOriginModeFlags.Floor)
+            m_Rig.cameraYOffset = 1.8f;
     }
 
     void OnEnable()
@@ -96,26 +122,13 @@ public class MasterController : MonoBehaviour
             
             if(TeleporterParent != null)
                 TeleporterParent.SetActive(false);
+            else
+            {
+                TeleporterParent = GameObject.Find("TeleportAnchors");
+                TeleporterParent.SetActive(false);
+            }
         }
         
-        InputDeviceCharacteristics leftTrackedControllerFilter = InputDeviceCharacteristics.HeldInHand | InputDeviceCharacteristics.Left;
-        List<InputDevice> foundControllers = new List<InputDevice>();
-        
-        InputDevices.GetDevicesWithCharacteristics(leftTrackedControllerFilter, foundControllers);
-
-        if (foundControllers.Count > 0)
-            m_LeftInputDevice = foundControllers[0];
-        
-        
-        InputDeviceCharacteristics rightTrackedControllerFilter = InputDeviceCharacteristics.HeldInHand | InputDeviceCharacteristics.Right;
-
-        InputDevices.GetDevicesWithCharacteristics(rightTrackedControllerFilter, foundControllers);
-
-        if (foundControllers.Count > 0)
-            m_RightInputDevice = foundControllers[0];
-
-        if (m_Rig.currentTrackingOriginMode != TrackingOriginModeFlags.Floor)
-            m_Rig.cameraYOffset = 1.8f;
     }
 
     void RegisterDevices(InputDevice connectedDevice)
@@ -140,9 +153,12 @@ public class MasterController : MonoBehaviour
     {
         if(Keyboard.current.escapeKey.wasPressedThisFrame)
             Application.Quit();
-        
-        RightTeleportUpdate();
-        LeftTeleportUpdate();
+
+        if (serverStarted)
+        {
+            RightTeleportUpdate();
+            LeftTeleportUpdate();
+        }
     }
 
     void RightTeleportUpdate()

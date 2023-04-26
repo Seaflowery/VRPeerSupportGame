@@ -23,10 +23,4 @@ public class AuthorityManager: NetworkBehaviour
         identity.RemoveClientAuthority();
     }
 
-
-    public void OnStartAuthorize(NetworkConnectionToClient conn, GameObject prefab)
-    {
-        NetworkIdentity identity = prefab.GetComponent<NetworkIdentity>();
-        identity.AssignClientAuthority(conn);
-    }
 }

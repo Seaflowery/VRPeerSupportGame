@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -7,10 +8,23 @@ using UnityEngine.SceneManagement;
 /// This will be picked up automatically by the wrist watch when it get spawn in the scene by the Interaction toolkit
 /// and setup the buttons and the linked events on the canvas
 /// </summary>
+
 public class WitchHouseUIHook : WatchScript.IUIHook
 {
     public GameObject LeftUILineRenderer;
     public GameObject RightUILineRenderer;
+    public static WitchHouseUIHook Instance;
+
+    public void Awake()
+    {
+        Instance = this;
+    }
+
+    public void SetRenderer(GameObject leftUILineRenderer, GameObject rightUILineRenderer)
+    {
+        LeftUILineRenderer = leftUILineRenderer;
+        RightUILineRenderer = rightUILineRenderer;
+    }
     
     public override void GetHook(WatchScript watch)
     {

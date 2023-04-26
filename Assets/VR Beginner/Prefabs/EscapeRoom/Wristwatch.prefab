@@ -60,6 +60,8 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 0, g: 0.022526398, b: 0.7735849, a: 1}
   m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -161,6 +163,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Navigation:
     m_Mode: 3
+    m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
@@ -221,6 +224,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 4452910746709388048}
+        m_TargetAssemblyTypeName: 
         m_MethodName: SetTrigger
         m_Mode: 5
         m_Arguments:
@@ -232,6 +236,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
       - m_Target: {fileID: 4452910746709388048}
+        m_TargetAssemblyTypeName: 
         m_MethodName: ResetTrigger
         m_Mode: 5
         m_Arguments:
@@ -246,6 +251,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 4452910746709388048}
+        m_TargetAssemblyTypeName: 
         m_MethodName: SetTrigger
         m_Mode: 5
         m_Arguments:
@@ -257,6 +263,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
       - m_Target: {fileID: 4452910746709388048}
+        m_TargetAssemblyTypeName: 
         m_MethodName: ResetTrigger
         m_Mode: 5
         m_Arguments:
@@ -268,6 +275,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   UILineRenderer: {fileID: 0}
+  serverStart: 0
 --- !u!114 &8275119217112631669
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -293,6 +301,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 4813249447425252219}
+        m_TargetAssemblyTypeName: 
         m_MethodName: LookedAt
         m_Mode: 1
         m_Arguments:
@@ -307,6 +316,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 4813249447425252219}
+        m_TargetAssemblyTypeName: 
         m_MethodName: LookedAway
         m_Mode: 1
         m_Arguments:
@@ -401,6 +411,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
+  m_PresetInfoIsWorld: 1
 --- !u!114 &1700273619232417153
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -436,6 +447,7 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 0
+  m_RaycastTriggerInteraction: 1
 --- !u!1 &7268449600137209233
 GameObject:
   m_ObjectHideFlags: 0
@@ -498,6 +510,8 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -555,6 +569,7 @@ MonoBehaviour:
   m_ChildControlHeight: 0
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
+  m_ReverseArrangement: 0
 --- !u!1 &9063753645187662369
 GameObject:
   m_ObjectHideFlags: 0
@@ -615,6 +630,8 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -642,6 +659,26 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: e1913292ecadc644e93488c1e3d216e3,
         type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -4216859302048453862, guid: e1913292ecadc644e93488c1e3d216e3,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -4216859302048453862, guid: e1913292ecadc644e93488c1e3d216e3,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -4216859302048453862, guid: e1913292ecadc644e93488c1e3d216e3,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -4216859302048453862, guid: e1913292ecadc644e93488c1e3d216e3,
+        type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.01158
       objectReference: {fileID: 0}
@@ -654,6 +691,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalPosition.z
       value: -0.0963
+      objectReference: {fileID: 0}
+    - target: {fileID: -4216859302048453862, guid: e1913292ecadc644e93488c1e3d216e3,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.9934941
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: e1913292ecadc644e93488c1e3d216e3,
         type: 3}
@@ -672,16 +714,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: e1913292ecadc644e93488c1e3d216e3,
         type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.9934941
-      objectReference: {fileID: 0}
-    - target: {fileID: -4216859302048453862, guid: e1913292ecadc644e93488c1e3d216e3,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -4216859302048453862, guid: e1913292ecadc644e93488c1e3d216e3,
-        type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: -0.057000004
       objectReference: {fileID: 0}
@@ -694,21 +726,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: -0.18800001
-      objectReference: {fileID: 0}
-    - target: {fileID: -4216859302048453862, guid: e1913292ecadc644e93488c1e3d216e3,
-        type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: -4216859302048453862, guid: e1913292ecadc644e93488c1e3d216e3,
-        type: 3}
-      propertyPath: m_LocalScale.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: -4216859302048453862, guid: e1913292ecadc644e93488c1e3d216e3,
-        type: 3}
-      propertyPath: m_LocalScale.z
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -927199367670048503, guid: e1913292ecadc644e93488c1e3d216e3,
         type: 3}
