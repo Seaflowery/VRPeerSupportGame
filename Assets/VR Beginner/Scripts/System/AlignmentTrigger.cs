@@ -48,7 +48,8 @@ public class AlignmentTrigger : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (MasterController.Instance == null || serverStarted)
+        MasterController master = GetComponentInParent<MasterController>();
+        if (master == null || serverStarted)
         {
             bool allMatch = true;
 
@@ -62,13 +63,13 @@ public class AlignmentTrigger : MonoBehaviour
 
                 if (match.ExternalAxisMode == Mode.View)
                 {
-                    if (MasterController.Instance == null)
+                    if (master == null)
                     {
                         worldExternal = MasterControllerLocal.Instance.Rig.cameraGameObject.transform.TransformVector(match.ExternalAxis);
                     }
                     else
                     {
-                        worldExternal =  MasterController.Instance.Rig.cameraGameObject.transform.TransformVector(match.ExternalAxis);
+                        worldExternal =  master.Rig.cameraGameObject.transform.TransformVector(match.ExternalAxis);
                     }
                 }
                 else

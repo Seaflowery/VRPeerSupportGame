@@ -142,6 +142,7 @@ GameObject:
   - component: {fileID: 2251096792457726205}
   - component: {fileID: 8448499507243492147}
   - component: {fileID: -5707189008928864363}
+  - component: {fileID: 6425907247068832464}
   m_Layer: 0
   m_Name: PotionBottleBad
   m_TagString: Untagged
@@ -208,8 +209,20 @@ MonoBehaviour:
   m_FirstHoverEntered:
     m_PersistentCalls:
       m_Calls:
+      - m_Target: {fileID: 6425907247068832464}
+        m_TargetAssemblyTypeName: AuthorityManager, Assembly-CSharp
+        m_MethodName: Authorize
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
       - m_Target: {fileID: 7541619832275431478}
-        m_TargetAssemblyTypeName: 
+        m_TargetAssemblyTypeName: SelectionOutline, Assembly-CSharp
         m_MethodName: Highlight
         m_Mode: 1
         m_Arguments:
@@ -473,15 +486,36 @@ MonoBehaviour:
   syncPosition: 1
   syncRotation: 1
   syncScale: 0
+  interpolatePosition: 1
+  interpolateRotation: 1
+  interpolateScale: 1
   showGizmos: 0
   showOverlay: 0
   overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
   onlySyncOnChange: 1
   onlySyncOnChangeCorrectionMultiplier: 2
+  sendIntervalMultiplier: 3
   rotationSensitivity: 0.01
   compressRotation: 0
   positionPrecision: 0.01
   scalePrecision: 0.01
+  timelineOffset: 0
+--- !u!114 &6425907247068832464
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1528666310737360430}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c45e8c7a0d446f9b60eca858ea864e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
+  authorizeObjects: []
 --- !u!54 &1553889947604550878
 Rigidbody:
   m_ObjectHideFlags: 0

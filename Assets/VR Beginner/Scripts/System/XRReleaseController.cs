@@ -13,26 +13,8 @@ public class XRReleaseController : XRController
 {
     bool m_Selected;
 
-    // FieldInfo m_SelectionStateFieldInfo;
-    //
-    // FieldInfo m_SelectionStateActivatedThisFrameInfo;
-    // FieldInfo m_SelectionStateDectivatedThisFrameInfo;
-    // FieldInfo m_SelectionStateActiveInfo;
 
     bool m_Active = false;
-
-    protected override void OnEnable()
-    {
-        base.OnEnable();
-        //
-        // var interactionStateType = typeof(XRController).Assembly.GetType("UnityEngine.XR.Interaction.Toolkit.XRController+InteractionState");
-        //
-        // m_SelectionStateActivatedThisFrameInfo = interactionStateType.GetField("activatedThisFrame");
-        // m_SelectionStateDectivatedThisFrameInfo = interactionStateType.GetField("deActivatedThisFrame");
-        // m_SelectionStateActiveInfo = interactionStateType.GetField("active");
-        //
-        // m_SelectionStateFieldInfo = typeof(XRController).GetField("m_SelectInteractionState", BindingFlags.Instance | BindingFlags.NonPublic);
-    }
 
     protected void LateUpdate()
     {

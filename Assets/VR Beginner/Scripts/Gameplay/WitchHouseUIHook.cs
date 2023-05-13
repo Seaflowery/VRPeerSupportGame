@@ -13,27 +13,17 @@ public class WitchHouseUIHook : WatchScript.IUIHook
 {
     public GameObject LeftUILineRenderer;
     public GameObject RightUILineRenderer;
-    public static WitchHouseUIHook Instance;
 
-    public void Awake()
-    {
-        Instance = this;
-    }
 
-    public void SetRenderer(GameObject leftUILineRenderer, GameObject rightUILineRenderer)
-    {
-        LeftUILineRenderer = leftUILineRenderer;
-        RightUILineRenderer = rightUILineRenderer;
-    }
     
     public override void GetHook(WatchScript watch)
     {
         watch.AddButton("Reset", () => { SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex); });
-        watch.AddButton("Unlock Teleporters", () => {MasterController.Instance.TeleporterParent.SetActive(true);});
+        // watch.AddButton("Unlock Teleporters", () => {MasterController.Instance.TeleporterParent.SetActive(true);});
         watch.AddToggle("Closed Caption", (state) => { CCManager.Instance.gameObject.SetActive(state); });
 
-        LeftUILineRenderer.SetActive(false);
-        RightUILineRenderer.SetActive(false);
+        // LeftUILineRenderer.SetActive(false);
+        // RightUILineRenderer.SetActive(false);
 
         watch.UILineRenderer = LeftUILineRenderer;
     }

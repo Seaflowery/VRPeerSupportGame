@@ -20,30 +20,33 @@ public class PotionSpawner : NetworkBehaviour
     {
         if (recipe != null)
         {
-            /*SpawnerCorrect.Prefab = PotionPrefab;
+            SpawnerCorrect.Prefab = PotionPrefab;
             SpawnerCorrect.enabled = true;
-            SpawnerCorrect.Spawn();*/
-            CmdSpawnPotion(PotionPrefab, SpawnerCorrect);
+            SpawnerCorrect.Spawn();
+            // if (!isServer)
+            //     CmdSpawnPotion(PotionPrefab, SpawnerCorrect);
         }
         else
         {
-            /*SpawnerIncorrect.Prefab = BadPotionPrefab;
+            SpawnerIncorrect.Prefab = BadPotionPrefab;
             SpawnerIncorrect.enabled = true;
-            SpawnerIncorrect.Spawn();*/
-            CmdSpawnPotion(BadPotionPrefab, SpawnerIncorrect);
+            SpawnerIncorrect.Spawn();
+            // if (!isServer)
+            // {
+            //     CmdSpawnPotion(BadPotionPrefab, SpawnerIncorrect);
+            // }
+            // else
+            // {
+            //     GameObject potion = Instantiate(BadPotionPrefab, SpawnerIncorrect.transform.position, SpawnerIncorrect.transform.rotation);
+            //     NetworkServer.Spawn(potion); 
+            // }
         }
     }
 
-    [Command]
-    public void CmdSpawnPotion(GameObject prefab, ObjectSpawner spawner)
-    {
-        GameObject potion = Instantiate(prefab, spawner.transform.position, spawner.transform.rotation);
-        NetworkServer.Spawn(potion);
-        NetworkIdentity identity = potion.GetComponent<NetworkIdentity>();
-        NetworkConnectionToClient owner = connectionToClient as NetworkConnectionToClient;
-        if (owner != null)
-        {
-            identity.AssignClientAuthority(owner); // assign authority to owner
-        }
-    }
+    // [Command(requiresAuthority = false)]
+    // public void CmdSpawnPotion(GameObject prefab, ObjectSpawner spawner)
+    // {
+    //     GameObject potion = Instantiate(prefab, spawner.transform.position, spawner.transform.rotation);
+    //     NetworkServer.Spawn(potion);
+    // }
 }

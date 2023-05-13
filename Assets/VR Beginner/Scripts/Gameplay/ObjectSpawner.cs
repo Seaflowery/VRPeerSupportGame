@@ -28,7 +28,8 @@ public class ObjectSpawner : NetworkBehaviour
     public void Spawn()
     {
         var newInst = Instantiate(Prefab, SpawnPoint.position, SpawnPoint.rotation);
-        NetworkServer.Spawn(newInst);
+        if (isServer)
+            NetworkServer.Spawn(newInst);
 
         if (m_Instances.Count >= MaxInstances)
         {

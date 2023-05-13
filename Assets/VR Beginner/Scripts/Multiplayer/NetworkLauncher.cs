@@ -15,6 +15,7 @@ public class NetworkLauncher: NetworkManager
 {
     // public GameObject syncObject;
     public static NetworkLauncher Instance;
+    private bool _firstAdd = true;
 
     public override void Awake()
     {
@@ -27,29 +28,59 @@ public class NetworkLauncher: NetworkManager
         Debug.Log("get started server");
         NetworkServer.SpawnObjects();
         
+
+    }
+
+    public override void OnServerSceneChanged(string sceneName)
+    {
+        base.OnServerSceneChanged(sceneName);
+
+        GameObject key = GameObject.Find("KeyForDoor");
+        key.SetActive(false); 
     }
 
     public override async void OnServerAddPlayer(NetworkConnectionToClient conn)
     {
         Debug.Log("add player");
         // Assign authority to client for all networked objects spawned on the server
-        GameObject player = Instantiate(playerPrefab);
+        GameObject player = Instantiate(playerPrefab); 
         await SetupWatch(conn, player);
-        NetworkLocomotionSystem.Instance.FindXRRig();
-        NetworkSnapTurnProvider.Instance.SetControllers();
-        // find child gameobject of player named LeftUIInteractor 
-        GameObject cameraOffset = player.transform.Find("Camera Offset").gameObject;
-        GameObject leftUIInteractor = cameraOffset.transform.Find("LeftUIInteractor").gameObject;
-        GameObject rightUIInteractor = cameraOffset.transform.Find("RightUIInteractor").gameObject;
-        WitchHouseUIHook.Instance.SetRenderer(leftUIInteractor, rightUIInteractor);
-        MasterController.Instance.ServerStart();
-        WatchScript.Instance.ServerStart();
-        WatchScript.Instance.serverStart = true;
-        MasterController.Instance.serverStarted = true;
-        AlignmentTrigger.Instance.serverStarted = true;
-        CCManager.Instance.ServerStart();
-        CCManager.Instance.serverStart = true;
+        
+        TeleportationProvider provider = player.GetComponentInChildren<TeleportationProvider>();
+        GameObject[] teleports = GameObject.FindGameObjectsWithTag("Teleport0");
+        if (numPlayers == 2)
+        {
+            teleports = GameObject.FindGameObjectsWithTag("Teleport1");
+        }
+        foreach (GameObject teleport in teleports)
+        {
+            teleport.GetComponent<TeleportationAnchor>().teleportationProvider = provider;
+            teleport.GetComponent<AuthorityManager>().Authorize();
+        }
+        MasterController masterController = player.GetComponent<MasterController>();
+        masterController.OnConnect();
+        masterController.serverStarted = true;
+        if (_firstAdd)
+        {
+            // NetworkLocomotionSystem.Instance.FindXRRig();
+            // NetworkSnapTurnProvider.Instance.SetControllers();
+            // find child gameobject of player named LeftUIInteractor 
+            // GameObject cameraOffset = player.transform.Find("Camera Offset").gameObject;
+            // GameObject leftUIInteractor = cameraOffset.transform.Find("LeftUIInteractor").gameObject;
+            // GameObject rightUIInteractor = cameraOffset.transform.Find("RightUIInteractor").gameObject;
+            // WitchHouseUIHook.Instance.SetRenderer(leftUIInteractor, rightUIInteractor);
+            // MasterController.Instance.ServerStart();
+            
+            WatchScript.Instance.ServerStart();
+            WatchScript.Instance.serverStart = true;
+            // MasterController.Instance.serverStarted = true;
+            AlignmentTrigger.Instance.serverStarted = true;
+            CCManager.Instance.ServerStart();
+            CCManager.Instance.serverStart = true;
+            _firstAdd = false;
+        }
     }
+    
 
     private async Task SetupWatch(NetworkConnectionToClient conn, GameObject player)
     {
@@ -66,25 +97,49 @@ public class NetworkLauncher: NetworkManager
     
     IEnumerator FindXRRig()
     {
-        Debug.Log("in!");
-        GameObject player = null;
-        while (player == null)
+        int num = numPlayers + 1;
+        GameObject[] players = null;
+        while (players == null || players.Length < num)
         {
-            player = GameObject.Find("XR Rig Network(Clone)");
+            players = GameObject.FindGameObjectsWithTag("XRRig");
             yield return null;
         }
         Debug.Log("out");
-        NetworkLocomotionSystem.Instance.FindXRRig();
-        NetworkSnapTurnProvider.Instance.SetControllers();
+        GameObject xrRig = null;
+        foreach (GameObject player in players)
+        {
+            if (player.GetComponent<NetworkIdentity>().isLocalPlayer)
+            {
+                xrRig = player;
+                break;
+            }
+        }
+
+        TeleportationProvider provider = xrRig.GetComponentInChildren<TeleportationProvider>();
+        Log.Instance.CmdLog("provider: " + provider);
+        GameObject[] teleports = GameObject.FindGameObjectsWithTag("Teleport0");
+        if (num == 2)
+        {
+            teleports = GameObject.FindGameObjectsWithTag("Teleport1");
+        }
+        foreach (GameObject teleport in teleports)
+        {
+            teleport.GetComponent<TeleportationAnchor>().teleportationProvider = provider;
+            // teleport.GetComponent<AuthorityManager>().Authorize();
+        }
+        MasterController masterController = xrRig.GetComponent<MasterController>();
+        masterController.OnConnect();
+        masterController.serverStarted = true;
+        // NetworkLocomotionSystem.Instance.FindXRRig();
+        // NetworkSnapTurnProvider.Instance.SetControllers();
         // find child gameobject of player named LeftUIInteractor 
-        GameObject cameraOffset = player.transform.Find("Camera Offset").gameObject;
-        GameObject leftUIInteractor = cameraOffset.transform.Find("LeftUIInteractor").gameObject;
-        GameObject rightUIInteractor = cameraOffset.transform.Find("RightUIInteractor").gameObject;
-        WitchHouseUIHook.Instance.SetRenderer(leftUIInteractor, rightUIInteractor);
-        MasterController.Instance.ServerStart();
+        // GameObject cameraOffset = player.transform.Find("Camera Offset").gameObject;
+        // GameObject leftUIInteractor = cameraOffset.transform.Find("LeftUIInteractor").gameObject;
+        // GameObject rightUIInteractor = cameraOffset.transform.Find("RightUIInteractor").gameObject;
+        // MasterController.Instance.ServerStart();
         WatchScript.Instance.ServerStart();
         WatchScript.Instance.serverStart = true;
-        MasterController.Instance.serverStarted = true;
+        // MasterController.Instance.serverStarted = true;
         AlignmentTrigger.Instance.serverStarted = true;
         CCManager.Instance.ServerStart();
         CCManager.Instance.serverStart = true; 

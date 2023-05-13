@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
+using Mirror;
 using UnityEngine;
 
-public class ObjectLauncher : MonoBehaviour
+public class ObjectLauncher : NetworkBehaviour
 {
     public Transform SpawnPoint;
     public ProjectileBase ObjectToSpawn;
@@ -59,7 +60,7 @@ public class ObjectLauncher : MonoBehaviour
     void Launch()
     {
         var p = m_ProjectilesPool.Dequeue();
-        // p.gameObject.SetActive(true);
+        p.gameObject.SetActive(true);
         p.transform.position = SpawnPoint.position;
         
         p.Launched(SpawnPoint.transform.forward, this);
@@ -70,7 +71,6 @@ public class ObjectLauncher : MonoBehaviour
             Volume = 1.0f,
             SourceID = -999
         });
-        
     }
     
     public void ReturnProjectile(ProjectileBase proj)

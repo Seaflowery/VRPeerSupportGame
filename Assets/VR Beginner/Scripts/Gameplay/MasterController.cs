@@ -12,10 +12,8 @@ using InputDevice = UnityEngine.XR.InputDevice;
 /// Master script that will handle reading some input on the controller and trigger special events like Teleport or
 /// activating the MagicTractorBeam
 /// </summary>
-public class MasterController : MonoBehaviour
+public class MasterController : NetworkBehaviour
 {
-    static MasterController s_Instance = null;
-    public static MasterController Instance => s_Instance;
 
     public XRRig Rig => m_Rig;
 
@@ -61,36 +59,8 @@ public class MasterController : MonoBehaviour
     
     List<XRBaseInteractable> m_InteractableCache = new List<XRBaseInteractable>(16);
 
-    void Awake()
-    {
-        s_Instance = this;
-       
-    }
 
     
-    public void ServerStart()
-    {
-        m_Rig = GetComponent<XRRig>();
-        InputDeviceCharacteristics leftTrackedControllerFilter = InputDeviceCharacteristics.HeldInHand | InputDeviceCharacteristics.Left;
-        List<InputDevice> foundControllers = new List<InputDevice>();
-        
-        InputDevices.GetDevicesWithCharacteristics(leftTrackedControllerFilter, foundControllers);
-
-        if (foundControllers.Count > 0)
-            m_LeftInputDevice = foundControllers[0];
-        
-        
-        InputDeviceCharacteristics rightTrackedControllerFilter = InputDeviceCharacteristics.HeldInHand | InputDeviceCharacteristics.Right;
-
-        InputDevices.GetDevicesWithCharacteristics(rightTrackedControllerFilter, foundControllers);
-
-        if (foundControllers.Count > 0)
-            m_RightInputDevice = foundControllers[0];
-
-        if (m_Rig.currentTrackingOriginMode != TrackingOriginModeFlags.Floor)
-            m_Rig.cameraYOffset = 1.8f;
-    }
-
     void OnEnable()
     {
          InputDevices.deviceConnected += RegisterDevices;
@@ -103,6 +73,7 @@ public class MasterController : MonoBehaviour
 
     void Start()
     {
+        Debug.Log("start");
         m_RightLineVisual = RightTeleportInteractor.GetComponent<XRInteractorLineVisual>();
         m_RightLineVisual.enabled = false;
 
@@ -124,12 +95,39 @@ public class MasterController : MonoBehaviour
                 TeleporterParent.SetActive(false);
             else
             {
-                TeleporterParent = GameObject.Find("TeleportAnchors");
-                TeleporterParent.SetActive(false);
+                // TeleporterParent = GameObject.Find("TeleportAnchors");
+                // TeleporterParent.SetActive(false);
             }
         }
         
+        m_Rig = GetComponent<XRRig>();
+        
     }
+
+    public void OnConnect()
+    {
+        InputDeviceCharacteristics leftTrackedControllerFilter = InputDeviceCharacteristics.HeldInHand | InputDeviceCharacteristics.Left;
+        List<InputDevice> foundControllers = new List<InputDevice>();
+        
+        InputDevices.GetDevicesWithCharacteristics(leftTrackedControllerFilter, foundControllers);
+        if (foundControllers.Count > 0)
+            m_LeftInputDevice = foundControllers[0];
+        
+        
+        InputDeviceCharacteristics rightTrackedControllerFilter = InputDeviceCharacteristics.HeldInHand | InputDeviceCharacteristics.Right;
+
+        InputDevices.GetDevicesWithCharacteristics(rightTrackedControllerFilter, foundControllers);
+
+        if (foundControllers.Count > 0)
+            m_RightInputDevice = foundControllers[0];
+
+        if (m_Rig.currentTrackingOriginMode != TrackingOriginModeFlags.Floor)
+            m_Rig.cameraYOffset = 1.8f;
+    }
+
+
+    
+    
 
     void RegisterDevices(InputDevice connectedDevice)
     {

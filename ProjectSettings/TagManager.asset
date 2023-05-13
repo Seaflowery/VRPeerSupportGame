@@ -5,6 +5,11 @@ TagManager:
   serializedVersion: 2
   tags:
   - Hand
+  - Ignite
+  - XRRig
+  - Teleport1
+  - Teleport0
+  - Key
   layers:
   - Default
   - TransparentFX

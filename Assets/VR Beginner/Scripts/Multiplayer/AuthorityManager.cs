@@ -1,24 +1,44 @@
 ﻿using System;
+using System.Collections.Generic;
 using Mirror;
 using UnityEngine;
 
 public class AuthorityManager: NetworkBehaviour
 {
-    public static AuthorityManager Instance;
+    public List<GameObject> authorizeObjects;
 
-    private void Awake()
+    public void Authorize()
     {
-        Instance = this;
+        if (!isServer && !isOwned)
+            CmdAuthorize(netIdentity);
     }
     
-    [Command(requiresAuthority = false)]
-    public void CmdAuthorize(GameObject hoveredObject, NetworkIdentity identity)
-    { 
-        identity.AssignClientAuthority(hoveredObject.GetComponent<NetworkIdentity>().connectionToClient);
+    
+    public void RemoveAuthority()
+    {
+        if (!isServer && isOwned)
+            CmdRemoveAuthority(netIdentity);
+        foreach (GameObject authorizeObject in authorizeObjects)
+        {
+            if (authorizeObject != null && authorizeObject.GetComponent<NetworkIdentity>() != null)
+            {
+                NetworkIdentity id = authorizeObject.GetComponent<NetworkIdentity>();
+                if (!id.isServer && id.isOwned)
+                    CmdRemoveAuthority(id);
+            }
+        }
     }
 
     [Command(requiresAuthority = false)]
-    public void CmdRemoveAuthority(NetworkIdentity identity)
+    private void CmdAuthorize(NetworkIdentity identity, NetworkConnectionToClient sender = null)
+    { 
+        Debug.Log(identity.name + " is being authorized");
+        identity.RemoveClientAuthority();
+        identity.AssignClientAuthority(sender);
+    }
+
+    [Command(requiresAuthority = false)]
+    private void CmdRemoveAuthority(NetworkIdentity identity, NetworkConnectionToClient sender = null)
     {
         identity.RemoveClientAuthority();
     }

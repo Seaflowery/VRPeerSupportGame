@@ -1,8 +1,9 @@
 ﻿using System;
+using Mirror;
 using UnityEngine;
 using UnityEngine.Assertions;
 
-public class Quiz: MonoBehaviour
+public class Quiz: NetworkBehaviour
 {
     private const int ChoiceNum = 4;
     public GameObject[] quizChoice = new GameObject[ChoiceNum];
@@ -26,7 +27,7 @@ public class Quiz: MonoBehaviour
 
     private void PrepareQuestions(int round)
     {
-        // TODO: select quiz questions and get right answer 
+        // select quiz questions and get right answer 
         if (!questionOne)
         {
             rightAns = (round == 0) ? 1 : 3;
@@ -46,6 +47,7 @@ public class Quiz: MonoBehaviour
         }
     }
 
+
     public void NotifyRightAns(int round)
     {
         PrepareQuestions(round);
@@ -59,5 +61,7 @@ public class Quiz: MonoBehaviour
                 choice.problemOne = questionOne;
             }
         }
+        // CmdLog("all notified");
     }
+
 }

@@ -10,8 +10,8 @@ using UnityEditor;
 
 #if UNITY_2021_2_OR_NEWER
 using UnityEditor.SceneManagement;
-#elif UNITY_2018_3_OR_NEWER
-        using UnityEditor.Experimental.SceneManagement;
+#else
+using UnityEditor.Experimental.SceneManagement;
 #endif
 #endif
 
@@ -1200,9 +1200,7 @@ namespace Mirror
 
             // The client will match to the existing object
             NetworkServer.SendChangeOwnerMessage(this, conn);
-
             clientAuthorityCallback?.Invoke(conn, this, true);
-
             return true;
         }
 

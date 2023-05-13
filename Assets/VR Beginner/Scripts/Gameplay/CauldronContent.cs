@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Mirror;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.VFX;
@@ -9,7 +10,7 @@ using Random = UnityEngine.Random;
 /// <summary>
 /// Handle all operations related to dropping thing in the cauldron and brewing things.
 /// </summary>
-public class CauldronContent : MonoBehaviour
+public class CauldronContent : NetworkBehaviour
 {
     [System.Serializable]
     public class Recipe
@@ -64,12 +65,17 @@ public class CauldronContent : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        CauldronIngredient ingredient = other.attachedRigidbody.GetComponentInChildren<CauldronIngredient>();
-
-
+        // CauldronIngredient ingredient = other.attachedRigidbody.GetComponentInChildren<CauldronIngredient>();
+        
         Vector3 contactPosition = other.attachedRigidbody.gameObject.transform.position;
         contactPosition.y = gameObject.transform.position.y;
+        if (!isServer)
+            CmdTrigger(contactPosition, other.attachedRigidbody.gameObject);
+    }
 
+    [Command(requiresAuthority = false)]
+    void CmdTrigger(Vector3 contactPosition, GameObject collide)
+    {
         SplashEffect.transform.position = contactPosition;
         
         SFXPlayer.Instance.PlaySFX(SplashClips[Random.Range(0, SplashClips.Length)], contactPosition, new SFXPlayer.PlayParameters()
@@ -81,16 +87,19 @@ public class CauldronContent : MonoBehaviour
 
         splashVFX.Play();
 
+        CauldronIngredient ingredient = collide.GetComponent<CauldronIngredient>();
+
         RespawnableObject respawnableObject = ingredient;
         if (ingredient != null)
         {
             m_CurrentIngredientsIn.Add(ingredient.IngredientType);
+            Debug.Log("ingredient " + ingredient.IngredientType + " added to the cauldron");
         }
         else
         {
             //added an object that is not an ingredient, it will make automatically fail any recipe
             m_CurrentIngredientsIn.Add("INVALID");
-            respawnableObject = other.attachedRigidbody.GetComponentInChildren<RespawnableObject>();
+            respawnableObject = collide.GetComponent<RespawnableObject>();
         }
 
         if (respawnableObject != null)
@@ -99,27 +108,49 @@ public class CauldronContent : MonoBehaviour
         }
         else
         {
-            Destroy(other.attachedRigidbody.gameObject, 0.5f);
-        }
+            Destroy(collide, 0.5f);
+        } 
     }
 
     public void ChangeTemperature(int step)
     {
+        Log.Instance.CmdLog("change temperature!");
+        CmdChangeTemperature(step);
+        m_CauldronEffect.SetBubbleIntensity(step);
+    }
+    
+    [Command(requiresAuthority = false)]
+    void CmdChangeTemperature(int step)
+    {
         m_Temperature = TemperatureIncrement * step;
         m_CauldronEffect.SetBubbleIntensity(step);
+        Debug.Log("Temperature changed to " + m_Temperature);
     }
 
     public void ChangeRotation(int step)
     {
+        CmdChangeRotation(step);
+        m_CauldronEffect.SetRotationSpeed(m_Rotation);
+    }
+    
+    [Command(requiresAuthority = false)]
+    void CmdChangeRotation(int step)
+    {
         m_Rotation = step - 1;
         m_CauldronEffect.SetRotationSpeed(m_Rotation);
+        Debug.Log("Rotation changed to " + m_Rotation);
     }
 
     public void Brew()
     {
-        if(!m_CanBrew)
-            return;
-
+        if (!isServer)
+            CmdBrew();
+        // StartCoroutine(SetAnimation());
+    }
+    
+    [Command(requiresAuthority = false)]
+    void CmdBrew()
+    {
         brewEffect.SendEvent("StartLongSpawn");
         CauldronAnimator.SetTrigger("Brew");
         
@@ -148,6 +179,7 @@ public class CauldronContent : MonoBehaviour
         }
 
         ResetCauldron();
+        RpcAnimation();
 
         StartCoroutine(WaitForBrewCoroutine(recipeBewed));
     }
@@ -164,6 +196,25 @@ public class CauldronContent : MonoBehaviour
         
         OnBrew.Invoke(recipe);
         m_CanBrew = true;
+        AmbientSoundSource.volume = m_StartingVolume;
+    }
+    
+    [ClientRpc]
+    void RpcAnimation()
+    {
+        StartCoroutine(SetAnimation());
+    }
+    
+    IEnumerator SetAnimation()
+    {
+        brewEffect.SendEvent("StartLongSpawn");
+        CauldronAnimator.SetTrigger("Brew");
+        BrewingSoundSource.Play();
+        AmbientSoundSource.volume = m_StartingVolume * 0.2f;
+        yield return new WaitForSeconds(3.0f);
+        brewEffect.SendEvent("EndLongSpawn");
+        CauldronAnimator.SetTrigger("Open");
+        BrewingSoundSource.Stop();
         AmbientSoundSource.volume = m_StartingVolume;
     }
 
