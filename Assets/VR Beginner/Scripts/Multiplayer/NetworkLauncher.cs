@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 using Mirror;
@@ -54,29 +55,21 @@ public class NetworkLauncher: NetworkManager
         await SetupWatch(conn, player);
         
         TeleportationProvider provider = player.GetComponentInChildren<TeleportationProvider>();
-        GameObject[] teleports = GameObject.FindGameObjectsWithTag("Teleport0");
+        GameObject[] teleports = TeleportationAnchors.Instance._teleports0;
         if (numPlayers == 2)
         {
-            teleports = GameObject.FindGameObjectsWithTag("Teleport1");
+            teleports = TeleportationAnchors.Instance._teleports1;
         }
         foreach (GameObject teleport in teleports)
         {
             teleport.GetComponent<TeleportationAnchor>().teleportationProvider = provider;
-            teleport.GetComponent<AuthorityManager>().Authorize();
+            // teleport.GetComponent<AuthorityManager>().Authorize();
         }
         MasterController masterController = player.GetComponent<MasterController>();
         masterController.OnConnect();
         masterController.serverStarted = true;
         if (_firstAdd)
         {
-            // NetworkLocomotionSystem.Instance.FindXRRig();
-            // NetworkSnapTurnProvider.Instance.SetControllers();
-            // find child gameobject of player named LeftUIInteractor 
-            // GameObject cameraOffset = player.transform.Find("Camera Offset").gameObject;
-            // GameObject leftUIInteractor = cameraOffset.transform.Find("LeftUIInteractor").gameObject;
-            // GameObject rightUIInteractor = cameraOffset.transform.Find("RightUIInteractor").gameObject;
-            // WitchHouseUIHook.Instance.SetRenderer(leftUIInteractor, rightUIInteractor);
-            // MasterController.Instance.ServerStart();
             
             WatchScript.Instance.ServerStart();
             WatchScript.Instance.serverStart = true;
@@ -93,6 +86,7 @@ public class NetworkLauncher: NetworkManager
     {
         // Add the player to the game world
         NetworkServer.AddPlayerForConnection(conn, player);
+        Debug.Log("add xr rig");
 
         await Task.Yield(); // Wait for next frame
     }
@@ -124,26 +118,21 @@ public class NetworkLauncher: NetworkManager
 
         TeleportationProvider provider = xrRig.GetComponentInChildren<TeleportationProvider>();
         Log.Instance.CmdLog("provider: " + provider);
-        GameObject[] teleports = GameObject.FindGameObjectsWithTag("Teleport0");
+        GameObject[] teleports = TeleportationAnchors.Instance._teleports0;
         if (num == 2)
         {
-            teleports = GameObject.FindGameObjectsWithTag("Teleport1");
+            teleports = TeleportationAnchors.Instance._teleports1;
         }
         foreach (GameObject teleport in teleports)
         {
+            teleport.SetActive(true);
             teleport.GetComponent<TeleportationAnchor>().teleportationProvider = provider;
             // teleport.GetComponent<AuthorityManager>().Authorize();
         }
         MasterController masterController = xrRig.GetComponent<MasterController>();
         masterController.OnConnect();
         masterController.serverStarted = true;
-        // NetworkLocomotionSystem.Instance.FindXRRig();
-        // NetworkSnapTurnProvider.Instance.SetControllers();
-        // find child gameobject of player named LeftUIInteractor 
-        // GameObject cameraOffset = player.transform.Find("Camera Offset").gameObject;
-        // GameObject leftUIInteractor = cameraOffset.transform.Find("LeftUIInteractor").gameObject;
-        // GameObject rightUIInteractor = cameraOffset.transform.Find("RightUIInteractor").gameObject;
-        // MasterController.Instance.ServerStart();
+        
         WatchScript.Instance.ServerStart();
         WatchScript.Instance.serverStart = true;
         // MasterController.Instance.serverStarted = true;

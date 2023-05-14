@@ -1,7 +1,8 @@
-﻿using UnityEngine;
+﻿using Mirror;
+using UnityEngine;
 using UnityEngine.Events;
 
-public class QuizChoice: MonoBehaviour
+public class QuizChoice: NetworkBehaviour
 {
     public bool rightAns;
     public GameObject cookingAnchor;
