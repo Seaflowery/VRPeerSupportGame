@@ -1,8 +1,9 @@
 ﻿using System;
 using UnityEngine;
 using System.Collections;
+using Mirror;
 
-public class DancingManager: MonoBehaviour
+public class DancingManager: NetworkBehaviour
 {
     private const int CountdownNum = 3;
     private const int MagicPointNum = 2;
@@ -10,6 +11,7 @@ public class DancingManager: MonoBehaviour
     public AudioSource bgm;
     public AudioSource pass;
     public AudioSource fail;
+    public AudioSource ding;
     public AudioSource[] countdown = new AudioSource[CountdownNum];
     public GameObject[] magicPoints = new GameObject[MagicPointNum];
     public GameObject fireplaceAnchor;
@@ -18,6 +20,7 @@ public class DancingManager: MonoBehaviour
     private Timer _magicTimer = new Timer(4);
     private int totalNum;
     private int hitNum;
+    int pointNum = 0;
     
     public void Start()
     {
@@ -32,20 +35,57 @@ public class DancingManager: MonoBehaviour
     
     public void OnEnterDancingAnchor()
     {
+        if (!isServer)
+            CmdStartGame();
+    }
+    
+    [Command(requiresAuthority = false)]
+    void CmdStartGame()
+    {
+        RpcStartGame();
         startButton.SetActive(false);
+        Debug.Log("Start dancing!!!!");
         StartCoroutine(DescriptionAudioPlay());
+    }
+    
+    [ClientRpc]
+    void RpcStartGame()
+    {
+        startButton.SetActive(false);
     }
 
     public void OnHit()
     {
+        CmdHit();
+    }
+    
+    [Command(requiresAuthority = false)]
+    void CmdHit()
+    {
+        Debug.Log("hit!!!");
         ++hitNum;
+        RpcHit();
+    }
+    
+    [ClientRpc]
+    void RpcHit()
+    {
+        ding.Play();
+        magicPoints[pointNum].SetActive(false);
     }
 
     IEnumerator DescriptionAudioPlay()
     {
         description.Play();
+        RpcPlayDescription();
         yield return new WaitForSeconds(description.clip.length);
         StartCoroutine(StartGame());
+    }
+    
+    [ClientRpc]
+    void RpcPlayDescription() 
+    {
+        description.Play();
     }
 
     IEnumerator StartGame()
@@ -56,7 +96,8 @@ public class DancingManager: MonoBehaviour
             _countdownTimer.Tick(TimeManager.DeltaTime);
             if (_countdownTimer.TimeOut)
             {
-                countdown[cnt].Play();
+                RpcPlayCountdown(cnt);
+                // countdown[cnt].Play();
                 cnt++;
                 _countdownTimer.Reset();
             }
@@ -65,23 +106,44 @@ public class DancingManager: MonoBehaviour
         }
         
         bgm.Play();
+        RpcPlayBgm();
         StartCoroutine(RenderGame());
     }
+    
+    [ClientRpc]
+    void RpcPlayBgm()
+    {
+        bgm.Play();
+    }
+    
+    [ClientRpc]
+    void RpcPlayCountdown(int cnt)
+    {
+        countdown[cnt].Play();
+    }
 
+    [ClientRpc]
+    void RpcSetMagicPoint(int pointNum, bool active)
+    {
+        magicPoints[pointNum].SetActive(active);
+    }
+    
 
     IEnumerator RenderGame()
     {
-        int pointNum = 0;
         magicPoints[pointNum].SetActive(true);
+        RpcSetMagicPoint(pointNum, true);
         totalNum = 1;
         while (bgm.isPlaying)
         {
             _magicTimer.Tick(TimeManager.DeltaTime);
             if (_magicTimer.TimeOut)
             {
-                magicPoints[pointNum].SetActive(false);
+                // magicPoints[pointNum].SetActive(false);
+                RpcSetMagicPoint(pointNum, false);
                 pointNum = (pointNum + 1) % MagicPointNum;
                 magicPoints[pointNum].SetActive(true);
+                RpcSetMagicPoint(pointNum, true);
                 totalNum++;
                 _magicTimer.Reset();
             }
@@ -89,25 +151,44 @@ public class DancingManager: MonoBehaviour
             yield return null;
         }
 
-        foreach (GameObject magicPoint in magicPoints)
+        for (int i = 0; i < MagicPointNum; i++)
         {
-            magicPoint.SetActive(false);
+            magicPoints[i].SetActive(false);
+            RpcSetMagicPoint(i, false);
         }
 
         if (Pass())
         {
-            pass.Play();
+            // pass.Play();
+            RpcPlayPass();
             fireplaceAnchor.SetActive(true);
         }
         else
         {
-            fail.Play();
+            // fail.Play();
+            RpcPlayFail();
             yield return new WaitForSeconds(fail.clip.length);
             hitNum = 0;
             startButton.SetActive(true);
             StopAllCoroutines();
         }
         
+    }
+    
+    
+    
+    [ClientRpc]
+    void RpcPlayPass()
+    {
+        pass.Play();
+        fireplaceAnchor.SetActive(true);
+    }
+    
+    [ClientRpc]
+    void RpcPlayFail()
+    {
+        fail.Play();
+        startButton.SetActive(true);
     }
 
     private bool Pass()

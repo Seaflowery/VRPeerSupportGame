@@ -12,6 +12,7 @@ public class MagicReceiver : NetworkBehaviour
 {
     public UnityEvent OnMagicCollision;
     public bool DestroyedOnTriggered;
+    public bool inactivateOnTriggered = false;
     
     void OnCollisionEnter(Collision other)
     {
@@ -22,7 +23,16 @@ public class MagicReceiver : NetworkBehaviour
             Destroy(proj);
             OnMagicCollision.Invoke();
             if (!isServer)
+            {
+                Log.Instance.CmdLog("here!");
                 CmdInvoke();
+            }
+
+            if (inactivateOnTriggered)
+            {
+                Log.Instance.CmdLog("in!");
+                CmdInactivate();
+            }
             if(DestroyedOnTriggered)
                 Destroy(this);
         }
@@ -31,11 +41,26 @@ public class MagicReceiver : NetworkBehaviour
     [Command(requiresAuthority = false)]
     void CmdInvoke()
     {
+        // Debug.Log("magic invoked");
         OnMagicCollision.Invoke();
         RpcInvoke();
     }
+
+    [Command(requiresAuthority = false)]
+    void CmdInactivate()
+    {
+        Debug.Log("magic inactivated");
+        RpcInactivate();
+        gameObject.SetActive(false);
+    }
     
-    [ClientRpc]
+    [ClientRpc(includeOwner = false)]
+    void RpcInactivate()
+    {
+        gameObject.SetActive(false);
+    }
+    
+    [ClientRpc(includeOwner = false)]
     void RpcInvoke()
     {
         OnMagicCollision.Invoke();

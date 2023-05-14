@@ -37,6 +37,13 @@ public class NetworkLauncher: NetworkManager
 
         GameObject key = GameObject.Find("KeyForDoor");
         key.SetActive(false); 
+        GameObject dancingInteriors = GameObject.Find("Interior/dancingInteriors");
+        GameObject pumpkin = dancingInteriors.transform.Find("Pumpkin").gameObject;
+        GameObject pumpkin1 = dancingInteriors.transform.Find("Pumpkin1").gameObject;
+        pumpkin.SetActive(false);
+        pumpkin1.SetActive(false);
+        GameObject fireboy = GameObject.Find("Interior/FireBoy");
+        fireboy.SetActive(false);
     }
 
     public override async void OnServerAddPlayer(NetworkConnectionToClient conn)
