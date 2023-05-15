@@ -3876,7 +3876,7 @@ PrefabInstance:
     - target: {fileID: 2057296594790293761, guid: 942fad8a26445c44596b9797de96bc39,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -3.954
+      value: -3.947
       objectReference: {fileID: 0}
     - target: {fileID: 2057296594790293761, guid: 942fad8a26445c44596b9797de96bc39,
         type: 3}
@@ -3886,7 +3886,7 @@ PrefabInstance:
     - target: {fileID: 2057296594790293761, guid: 942fad8a26445c44596b9797de96bc39,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 1.412
+      value: 1.413
       objectReference: {fileID: 0}
     - target: {fileID: 2057296594790293761, guid: 942fad8a26445c44596b9797de96bc39,
         type: 3}
@@ -4011,19 +4011,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
---- !u!65 &369493319
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 369493317}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 0
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: -1}
 --- !u!1001 &374033386
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4688,7 +4675,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1278372930, guid: 762e3c2a45258ea4baa2ab45328a3243, type: 3}
       propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.size
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 1278372930, guid: 762e3c2a45258ea4baa2ab45328a3243, type: 3}
       propertyPath: m_OnSelectEntered.m_PersistentCalls.m_Calls.Array.size
@@ -4704,7 +4691,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1278372930, guid: 762e3c2a45258ea4baa2ab45328a3243, type: 3}
       propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.data[2].m_Mode
-      value: 6
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 1278372930, guid: 762e3c2a45258ea4baa2ab45328a3243, type: 3}
       propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.data[3].m_Mode
@@ -4725,7 +4712,7 @@ PrefabInstance:
     - target: {fileID: 1278372930, guid: 762e3c2a45258ea4baa2ab45328a3243, type: 3}
       propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.data[2].m_Target
       value: 
-      objectReference: {fileID: 520589313}
+      objectReference: {fileID: 1405003451}
     - target: {fileID: 1278372930, guid: 762e3c2a45258ea4baa2ab45328a3243, type: 3}
       propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.data[3].m_Target
       value: 
@@ -4760,7 +4747,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1278372930, guid: 762e3c2a45258ea4baa2ab45328a3243, type: 3}
       propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.data[2].m_MethodName
-      value: SetActive
+      value: NotifyRightAns
       objectReference: {fileID: 0}
     - target: {fileID: 1278372930, guid: 762e3c2a45258ea4baa2ab45328a3243, type: 3}
       propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.data[3].m_MethodName
@@ -4780,7 +4767,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1278372930, guid: 762e3c2a45258ea4baa2ab45328a3243, type: 3}
       propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.data[2].m_TargetAssemblyTypeName
-      value: UnityEngine.GameObject, UnityEngine
+      value: Quiz, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 1278372930, guid: 762e3c2a45258ea4baa2ab45328a3243, type: 3}
       propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.data[3].m_TargetAssemblyTypeName
@@ -4859,7 +4846,7 @@ PrefabInstance:
     - target: {fileID: 6117647711271196231, guid: 762e3c2a45258ea4baa2ab45328a3243,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.854
+      value: -0.738
       objectReference: {fileID: 0}
     - target: {fileID: 6117647711271196231, guid: 762e3c2a45258ea4baa2ab45328a3243,
         type: 3}
@@ -24588,34 +24575,10 @@ MonoBehaviour:
   OnSelectedEnter:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1405003451}
-        m_TargetAssemblyTypeName: Quiz, Assembly-CSharp
-        m_MethodName: SetQuestionOne
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
       - m_Target: {fileID: 520589313}
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
         m_MethodName: SetActive
         m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 1405003451}
-        m_TargetAssemblyTypeName: Quiz, Assembly-CSharp
-        m_MethodName: NotifyRightAns
-        m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -29599,17 +29562,17 @@ PrefabInstance:
     - target: {fileID: 2756217779341772916, guid: c8f2b1b288a4937408386e95b4b23812,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -3.5679
+      value: -3.485
       objectReference: {fileID: 0}
     - target: {fileID: 2756217779341772916, guid: c8f2b1b288a4937408386e95b4b23812,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.3251
+      value: 1.279
       objectReference: {fileID: 0}
     - target: {fileID: 2756217779341772916, guid: c8f2b1b288a4937408386e95b4b23812,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 1.1054
+      value: 1.113
       objectReference: {fileID: 0}
     - target: {fileID: 2756217779341772916, guid: c8f2b1b288a4937408386e95b4b23812,
         type: 3}
