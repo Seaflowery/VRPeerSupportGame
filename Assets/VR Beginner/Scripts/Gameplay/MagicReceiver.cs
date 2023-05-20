@@ -13,9 +13,12 @@ public class MagicReceiver : NetworkBehaviour
     public UnityEvent OnMagicCollision;
     public bool DestroyedOnTriggered;
     public bool inactivateOnTriggered = false;
+    public bool ColorConcerned = false;
     
-    void OnCollisionEnter(Collision other)
+    protected virtual void OnCollisionEnter(Collision other)
     {
+        if (ColorConcerned)
+            return;
         var proj = other.rigidbody.GetComponent<MagicBallProjectile>();
 
         if (proj != null)
@@ -24,13 +27,11 @@ public class MagicReceiver : NetworkBehaviour
             OnMagicCollision.Invoke();
             if (!isServer)
             {
-                Log.Instance.CmdLog("here!");
                 CmdInvoke();
             }
 
             if (inactivateOnTriggered)
             {
-                Log.Instance.CmdLog("in!");
                 CmdInactivate();
             }
             if(DestroyedOnTriggered)
@@ -39,9 +40,9 @@ public class MagicReceiver : NetworkBehaviour
     }
     
     [Command(requiresAuthority = false)]
-    void CmdInvoke()
+    protected void CmdInvoke()
     {
-        // Debug.Log("magic invoked");
+        Debug.Log("magic invoked");
         OnMagicCollision.Invoke();
         RpcInvoke();
     }

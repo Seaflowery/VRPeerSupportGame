@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using Mirror;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering.Universal;
+using UnityEngine.SpatialTracking;
 using UnityEngine.XR;
 using UnityEngine.XR.Interaction.Toolkit;
 using CommonUsages = UnityEngine.XR.CommonUsages;
@@ -74,17 +76,7 @@ public class MasterController : NetworkBehaviour
     void Start()
     {
         Debug.Log("start");
-        m_RightLineVisual = RightTeleportInteractor.GetComponent<XRInteractorLineVisual>();
-        m_RightLineVisual.enabled = false;
-
-        m_LeftLineVisual = LeftTeleportInteractor.GetComponent<XRInteractorLineVisual>();
-        m_LeftLineVisual.enabled = false;
-
-        m_RightController = RightTeleportInteractor.GetComponent<XRReleaseController>();
-        m_LeftController = LeftTeleportInteractor.GetComponent<XRReleaseController>();
-
-        m_OriginalRightMask = RightTeleportInteractor.interactionLayerMask;
-        m_OriginalLeftMask = LeftTeleportInteractor.interactionLayerMask;
+        
         
         if (!DisableSetupForDebug)
         {
@@ -106,13 +98,59 @@ public class MasterController : NetworkBehaviour
 
     public void OnConnect()
     {
+        RightDirectInteractor = gameObject.transform.Find("Camera Offset/XR RightHand Controller(Clone)").GetComponent<XRDirectInteractor>();
+        LeftDirectInteractor = gameObject.transform.Find("Camera Offset/XR LeftHand Controller(Clone)").GetComponent<XRDirectInteractor>();
+        RightTractorBeam = gameObject.transform.Find("Camera Offset/XR RightHand Controller(Clone)").GetComponent<MagicTractorBeam>();
+        LeftTractorBeam = gameObject.transform.Find("Camera Offset/XR LeftHand Controller(Clone)").GetComponent<MagicTractorBeam>();
+        m_RightLineVisual = RightTeleportInteractor.GetComponent<XRInteractorLineVisual>();
+        m_RightLineVisual.enabled = false;
+
+        m_LeftLineVisual = LeftTeleportInteractor.GetComponent<XRInteractorLineVisual>();
+        m_LeftLineVisual.enabled = false;
+
+        m_RightController = RightTeleportInteractor.GetComponent<XRReleaseController>();
+        m_LeftController = LeftTeleportInteractor.GetComponent<XRReleaseController>();
+
+        m_OriginalRightMask = RightTeleportInteractor.interactionLayerMask;
+        m_OriginalLeftMask = LeftTeleportInteractor.interactionLayerMask;
+        
         InputDeviceCharacteristics leftTrackedControllerFilter = InputDeviceCharacteristics.HeldInHand | InputDeviceCharacteristics.Left;
         List<InputDevice> foundControllers = new List<InputDevice>();
         
         InputDevices.GetDevicesWithCharacteristics(leftTrackedControllerFilter, foundControllers);
-        if (foundControllers.Count > 0)
+        if (!isServer)
+            Log.Instance.CmdLog(NetworkLauncher.Instance.numPlayers + " players");
+        if (foundControllers.Count > 0 && NetworkLauncher.Instance.numPlayers == 0)
             m_LeftInputDevice = foundControllers[0];
-        
+        else if (foundControllers.Count > 1)
+        {
+            XRRig[] xrRig = GameObject.FindObjectsOfType<XRRig>();
+            foreach (XRRig rig in xrRig)
+            {
+                if (!isServer)
+                    Log.Instance.CmdLog("rig: " + rig.gameObject.name);
+                if (rig.gameObject != gameObject)
+                {
+                    rig.transform.Find("Camera Offset/Main Camera").gameObject.SetActive(false);
+                    rig.transform.Find("Camera Offset/RightHand Controller").GetComponent<AlignmentTrigger>().enabled = false;
+                    rig.transform.Find("Camera Offset/LeftHand Controller").GetComponent<AlignmentTrigger>().enabled = false;
+                    rig.gameObject.GetComponent<MasterController>().enabled = false;
+                    
+                    foreach (var controller in foundControllers)
+                    {
+                        if (controller != rig.gameObject.GetComponent<MasterController>().m_LeftInputDevice)
+                        {
+                            m_LeftInputDevice = controller;
+                            break;
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+        if (!isServer)
+            Log.Instance.CmdLog("left controller: " + m_LeftInputDevice.name);
+        Debug.Log("left controller: " + m_LeftInputDevice.name);
         
         InputDeviceCharacteristics rightTrackedControllerFilter = InputDeviceCharacteristics.HeldInHand | InputDeviceCharacteristics.Right;
 
@@ -120,31 +158,76 @@ public class MasterController : NetworkBehaviour
 
         if (foundControllers.Count > 0)
             m_RightInputDevice = foundControllers[0];
+        
+        if (!isServer)
+            Log.Instance.CmdLog("right controller" + m_RightInputDevice.name);
 
         if (m_Rig.currentTrackingOriginMode != TrackingOriginModeFlags.Floor)
             m_Rig.cameraYOffset = 1.8f;
     }
+    
+    [Command(requiresAuthority = false)]
+    public void CmdConnect()
+    {
+        RpcBlockXRRig();
+    }
 
-
+    [ClientRpc]
+    public void RpcBlockXRRig()
+    {
+        XRRig[] xrRig = GameObject.FindObjectsOfType<XRRig>();
+        foreach (XRRig rig in xrRig)
+        {
+            if (rig.name != "Original XR Rig")
+            {
+                GameObject rightHand = GameObject.Find("/XR RightHand Controller(Clone)");
+                GameObject leftHand = GameObject.Find("/XR LeftHand Controller(Clone)");
+                rightHand.GetComponent<AlignmentTrigger>().enabled = false;
+                leftHand.GetComponent<AlignmentTrigger>().enabled = false;
+                rightHand.GetComponent<MagicTractorBeam>().enabled = false;
+                leftHand.GetComponent<MagicTractorBeam>().enabled = false;
+                rightHand.GetComponent<XRController>().enabled = false;
+                leftHand.GetComponent<XRController>().enabled = false;
+                rightHand.GetComponent<XRDirectInteractor>().enabled = false;
+                leftHand.GetComponent<XRDirectInteractor>().enabled = false;
+                leftHand.transform.SetParent(rig.transform.Find("Camera Offset").transform);
+                rightHand.transform.SetParent(rig.transform.Find("Camera Offset").transform);
+                rig.transform.GetComponentInChildren<TrackedPoseDriver>().enabled = false;
+                rig.transform.GetComponentInChildren<UniversalAdditionalCameraData>().enabled = false;
+                rig.transform.GetComponentInChildren<Camera>().enabled = false;
+                rig.transform.Find("Camera Offset/RightHandTeleportation").gameObject.SetActive(false);
+                rig.transform.Find("Camera Offset/LeftHandTeleportation").gameObject.SetActive(false);
+                rig.transform.Find("Camera Offset/LeftUIInteractor").gameObject.SetActive(false);
+                rig.transform.Find("Camera Offset/RightUIInteractor").gameObject.SetActive(false);
+                // rig.transform.Find("Camera Offset/XR RightHand Controller").GetComponent<AlignmentTrigger>().enabled = false;
+                // rig.transform.Find("Camera Offset/XR RightHand Controller").GetComponent<XRController>().enabled = false;
+                // rig.transform.Find("Camera Offset/XR RightHand Controller").GetComponent<XRDirectInteractor>().enabled = false;
+                // rig.transform.Find("Camera Offset/XR LeftHand Controller").GetComponent<AlignmentTrigger>().enabled = false;
+                // rig.transform.Find("Camera Offset/XR LeftHand Controller").GetComponent<XRController>().enabled = false;
+                // rig.transform.Find("Camera Offset/XR LeftHand Controller").GetComponent<XRDirectInteractor>().enabled = false;
+                rig.gameObject.GetComponent<MasterController>().enabled = false;
+            }
+        }
+    } 
     
     
 
     void RegisterDevices(InputDevice connectedDevice)
     {
-        if (connectedDevice.isValid)
-        {
-            if ((connectedDevice.characteristics & InputDeviceCharacteristics.HeldInHand) == InputDeviceCharacteristics.HeldInHand)
-            {
-                if ((connectedDevice.characteristics & InputDeviceCharacteristics.Left) == InputDeviceCharacteristics.Left)
-                {
-                    m_LeftInputDevice = connectedDevice;
-                }
-                else if ((connectedDevice.characteristics & InputDeviceCharacteristics.Right) == InputDeviceCharacteristics.Right)
-                {
-                    m_RightInputDevice = connectedDevice;
-                }
-            }
-        }
+        // if (connectedDevice.isValid)
+        // {
+        //     if ((connectedDevice.characteristics & InputDeviceCharacteristics.HeldInHand) == InputDeviceCharacteristics.HeldInHand)
+        //     {
+        //         if ((connectedDevice.characteristics & InputDeviceCharacteristics.Left) == InputDeviceCharacteristics.Left)
+        //         {
+        //             m_LeftInputDevice = connectedDevice;
+        //         }
+        //         else if ((connectedDevice.characteristics & InputDeviceCharacteristics.Right) == InputDeviceCharacteristics.Right)
+        //         {
+        //             m_RightInputDevice = connectedDevice;
+        //         }
+        //     }
+        // }
     }
     
     void Update()
@@ -155,6 +238,7 @@ public class MasterController : NetworkBehaviour
         if (serverStarted)
         {
             RightTeleportUpdate();
+            // Debug.Log(m_LeftInputDevice.name);
             LeftTeleportUpdate();
         }
     }

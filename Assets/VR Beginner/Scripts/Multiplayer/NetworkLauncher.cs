@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using Mirror;
 using Mirror.Examples.Chat;
+using UnityEngine.Networking.Types;
 using UnityEngine.XR.Interaction.Toolkit;
 
 using Debug = UnityEngine.Debug;
@@ -17,6 +18,8 @@ public class NetworkLauncher: NetworkManager
     // public GameObject syncObject;
     public static NetworkLauncher Instance;
     private bool _firstAdd = true;
+    public GameObject XRRightHand;
+    public GameObject XRLeftHand;
 
     public override void Awake()
     {
@@ -39,10 +42,10 @@ public class NetworkLauncher: NetworkManager
         GameObject key = GameObject.Find("KeyForDoor");
         key.SetActive(false); 
         GameObject dancingInteriors = GameObject.Find("Interior/dancingInteriors");
-        GameObject pumpkin = dancingInteriors.transform.Find("Pumpkin").gameObject;
-        GameObject pumpkin1 = dancingInteriors.transform.Find("Pumpkin1").gameObject;
-        pumpkin.SetActive(false);
-        pumpkin1.SetActive(false);
+        // GameObject pumpkin = dancingInteriors.transform.Find("Pumpkin").gameObject;
+        // GameObject pumpkin1 = dancingInteriors.transform.Find("Pumpkin1").gameObject;
+        /*pumpkin.SetActive(false);
+        pumpkin1.SetActive(false);*/
         GameObject fireboy = GameObject.Find("Interior/FireBoy");
         fireboy.SetActive(false);
     }
@@ -51,8 +54,20 @@ public class NetworkLauncher: NetworkManager
     {
         Debug.Log("add player");
         // Assign authority to client for all networked objects spawned on the server
-        GameObject player = Instantiate(playerPrefab); 
+        GameObject player = Instantiate(playerPrefab);
+        GameObject leftHand = Instantiate(XRLeftHand);
+        GameObject rightHand = Instantiate(XRRightHand);
+        leftHand.transform.parent = player.transform.Find("Camera Offset").transform;
+        rightHand.transform.parent = player.transform.Find("Camera Offset").transform;
         await SetupWatch(conn, player);
+        NetworkServer.Spawn(rightHand);
+        NetworkIdentity identity = rightHand.GetComponent<NetworkIdentity>();
+        identity.AssignClientAuthority(conn);
+        NetworkServer.Spawn(leftHand);
+        identity = leftHand.GetComponent<NetworkIdentity>();
+        identity.AssignClientAuthority(conn);
+        
+        ;
         
         TeleportationProvider provider = player.GetComponentInChildren<TeleportationProvider>();
         GameObject[] teleports = TeleportationAnchors.Instance._teleports0;
@@ -80,7 +95,8 @@ public class NetworkLauncher: NetworkManager
             _firstAdd = false;
         }
     }
-    
+
+
 
     private async Task SetupWatch(NetworkConnectionToClient conn, GameObject player)
     {
@@ -115,6 +131,27 @@ public class NetworkLauncher: NetworkManager
                 break;
             }
         }
+        xrRig.name = "Original XR Rig";
+        Debug.Log("xr rig: " + xrRig);
+        XRDirectInteractor[] directInteractors = GameObject.FindObjectsOfType<XRDirectInteractor>();
+        GameObject rightHand = null;
+        GameObject leftHand = null;
+        foreach (XRDirectInteractor directInteractor in directInteractors)
+        {
+            if (directInteractor.gameObject.name == "XR LeftHand Controller(Clone)" &&
+                directInteractor.transform.GetComponent<NetworkIdentity>().isOwned)
+            {
+                rightHand = directInteractor.gameObject;
+            }
+            else if (directInteractor.gameObject.name == "XR RightHand Controller(Clone)" &&
+                     directInteractor.transform.GetComponent<NetworkIdentity>().isOwned)
+            {
+                leftHand = directInteractor.gameObject;
+            }
+        }
+        Debug.Log("left hand!!!" + leftHand);
+        rightHand.transform.parent = xrRig.transform.Find("Camera Offset").transform;
+        leftHand.transform.parent = xrRig.transform.Find("Camera Offset").transform;
 
         TeleportationProvider provider = xrRig.GetComponentInChildren<TeleportationProvider>();
         Log.Instance.CmdLog("provider: " + provider);
@@ -129,6 +166,8 @@ public class NetworkLauncher: NetworkManager
             teleport.GetComponent<TeleportationAnchor>().teleportationProvider = provider;
             // teleport.GetComponent<AuthorityManager>().Authorize();
         }
+        
+        
         MasterController masterController = xrRig.GetComponent<MasterController>();
         masterController.OnConnect();
         masterController.serverStarted = true;
@@ -139,6 +178,7 @@ public class NetworkLauncher: NetworkManager
         AlignmentTrigger.Instance.serverStarted = true;
         CCManager.Instance.ServerStart();
         CCManager.Instance.serverStart = true; 
+        masterController.CmdConnect();
     }
 
     public override void OnStopServer()

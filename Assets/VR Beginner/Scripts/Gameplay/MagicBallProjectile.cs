@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class MagicBallProjectile : ProjectileBase
 {
+    public string color;
     Rigidbody m_Rigidbody;
     float m_LaunchTime = 0;
     bool m_Launched = false;

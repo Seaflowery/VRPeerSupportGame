@@ -1,4 +1,5 @@
-﻿using Mirror;
+﻿using System.Collections;
+using Mirror;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -17,8 +18,11 @@ public class QuizChoice: NetworkBehaviour
     {
         if (rightAns) 
             right.Play();
-        else 
+        else
+        {
             wrong.Play();
+            // StartCoroutine(DisableChoice());
+        }
         if (problemOne)
         {
             if (rightAns)
@@ -40,6 +44,19 @@ public class QuizChoice: NetworkBehaviour
                 startButton.SetActive(true);
             }    
         }
-        
     }
+
+    // IEnumerator DisableChoice()
+    // {
+    //     QuizChoice[] choices = FindObjectsOfType<QuizChoice>();
+    //     foreach (QuizChoice choice in choices)
+    //     {
+    //         choice.enabled = false;
+    //     }
+    //     yield return new WaitForSeconds(3);
+    //     foreach (QuizChoice choice in choices)
+    //     {
+    //         choice.enabled = true;
+    //     }
+    // }
 }

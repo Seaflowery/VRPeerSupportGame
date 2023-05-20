@@ -6,25 +6,42 @@ using Mirror;
 public class DancingManager: NetworkBehaviour
 {
     private const int CountdownNum = 3;
-    private const int MagicPointNum = 2;
+    private const int MagicPointNum = 9;
+    private const int GhostNum = 6;
     public AudioSource description;
     public AudioSource bgm;
     public AudioSource pass;
     public AudioSource fail;
     public AudioSource ding;
+    public AudioSource wrong;
     public AudioSource[] countdown = new AudioSource[CountdownNum];
     public GameObject[] magicPoints = new GameObject[MagicPointNum];
+    public GameObject[] ghosts = new GameObject[GhostNum];
     public GameObject fireplaceAnchor;
     public GameObject startButton;
     private Timer _countdownTimer = new Timer(1);
-    private Timer _magicTimer = new Timer(4);
+    private Timer _magicTimer = new Timer(1.5F);
     private int totalNum;
     private int hitNum;
     int pointNum = 0;
+    int ghostSeq = 0;
     
     public void Start()
     {
         hitNum = 0;
+    }
+
+    public override void OnStartClient()
+    {
+        base.OnStartClient();
+        foreach (GameObject magicPoint in magicPoints)
+        {
+            magicPoint.SetActive(false);
+        }
+        foreach (GameObject ghost in ghosts)
+        {
+            ghost.SetActive(false);
+        }
     }
 
 
@@ -56,23 +73,50 @@ public class DancingManager: NetworkBehaviour
 
     public void OnHit()
     {
-        CmdHit();
-    }
-    
-    [Command(requiresAuthority = false)]
-    void CmdHit()
-    {
-        Debug.Log("hit!!!");
+        // if (!isServer)
+        //     CmdHit();
         ++hitNum;
-        RpcHit();
+        if (isServer)
+            Debug.Log("hit num: " + hitNum);
     }
     
-    [ClientRpc]
-    void RpcHit()
+    // [Command(requiresAuthority = false)]
+    // void CmdHit()
+    // {
+    //     Debug.Log("hit!!!");
+    //     ++hitNum;
+    //     RpcHit();
+    // }
+    
+    // [ClientRpc]
+    // void RpcHit()
+    // {
+    //     ding.Play();
+    //     magicPoints[pointNum].SetActive(false);
+    // }
+    
+    public void HitGhost()
     {
-        ding.Play();
-        magicPoints[pointNum].SetActive(false);
+        // if (!isServer)
+        //     CmdHitGhost();
+        --hitNum;
+        if (isServer)
+            Debug.Log("hit num: " + hitNum);
     }
+
+    // [Command(requiresAuthority = false)]
+    // public void CmdHitGhost()
+    // {
+    //     --hitNum;
+    //     RpcHitGhost();
+    // }
+    //
+    // [ClientRpc]
+    // void RpcHitGhost()
+    // {
+    //     wrong.Play();
+    //     ghosts[ghostSeq].SetActive(false);
+    // }
 
     IEnumerator DescriptionAudioPlay()
     {
@@ -128,6 +172,12 @@ public class DancingManager: NetworkBehaviour
         magicPoints[pointNum].SetActive(active);
     }
     
+    [ClientRpc]
+    void RpcSetGhost(int ghostSeq, bool active)
+    {
+        ghosts[ghostSeq].SetActive(active);
+    }
+    
 
     IEnumerator RenderGame()
     {
@@ -141,10 +191,24 @@ public class DancingManager: NetworkBehaviour
             {
                 // magicPoints[pointNum].SetActive(false);
                 RpcSetMagicPoint(pointNum, false);
-                pointNum = (pointNum + 1) % MagicPointNum;
-                magicPoints[pointNum].SetActive(true);
-                RpcSetMagicPoint(pointNum, true);
-                totalNum++;
+                RpcSetGhost(ghostSeq, false);
+                // random a new point
+                pointNum = UnityEngine.Random.Range(0, MagicPointNum);
+                int rand = UnityEngine.Random.Range(0, 4);
+                if (rand == 0)
+                {
+                    ghostSeq = (pointNum + 1) % GhostNum;
+                    ghosts[ghostSeq].SetActive(true);
+                    RpcSetGhost(ghostSeq, true);
+                }
+                // pointNum = (pointNum + 1) % MagicPointNum;
+                else
+                {
+                    magicPoints[pointNum].SetActive(true);
+                    RpcSetMagicPoint(pointNum, true);
+                    totalNum++; 
+                }
+               
                 _magicTimer.Reset();
             }
             
@@ -155,6 +219,12 @@ public class DancingManager: NetworkBehaviour
         {
             magicPoints[i].SetActive(false);
             RpcSetMagicPoint(i, false);
+        }
+        
+        for (int i = 0; i < GhostNum; i++)
+        {
+            ghosts[i].SetActive(false);
+            RpcSetGhost(i, false);
         }
 
         if (Pass())

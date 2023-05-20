@@ -58,13 +58,17 @@ public class AlignmentTrigger : MonoBehaviour
                 AxisMatch match = RequiredMatch[i];
             
                 Vector3 worldLocal = transform.TransformVector(match.LocalAxis);
-                Vector3 worldExternal;
+                Vector3 worldExternal = Vector3.zero;
 
 
                 if (match.ExternalAxisMode == Mode.View)
                 {
                     if (master == null)
                     {
+                        if (MasterControllerLocal.Instance == null)
+                        {
+                            return;
+                        }
                         worldExternal = MasterControllerLocal.Instance.Rig.cameraGameObject.transform.TransformVector(match.ExternalAxis);
                     }
                     else
