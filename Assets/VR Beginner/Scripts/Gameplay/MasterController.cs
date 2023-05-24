@@ -192,9 +192,7 @@ public class MasterController : NetworkBehaviour
                 leftHand.GetComponent<XRDirectInteractor>().enabled = false;
                 leftHand.transform.SetParent(rig.transform.Find("Camera Offset").transform);
                 rightHand.transform.SetParent(rig.transform.Find("Camera Offset").transform);
-                rig.transform.GetComponentInChildren<TrackedPoseDriver>().enabled = false;
-                rig.transform.GetComponentInChildren<UniversalAdditionalCameraData>().enabled = false;
-                rig.transform.GetComponentInChildren<Camera>().enabled = false;
+                
                 rig.transform.Find("Camera Offset/RightHandTeleportation").gameObject.SetActive(false);
                 rig.transform.Find("Camera Offset/LeftHandTeleportation").gameObject.SetActive(false);
                 rig.transform.Find("Camera Offset/LeftUIInteractor").gameObject.SetActive(false);
@@ -205,6 +203,11 @@ public class MasterController : NetworkBehaviour
                 // rig.transform.Find("Camera Offset/XR LeftHand Controller").GetComponent<AlignmentTrigger>().enabled = false;
                 // rig.transform.Find("Camera Offset/XR LeftHand Controller").GetComponent<XRController>().enabled = false;
                 // rig.transform.Find("Camera Offset/XR LeftHand Controller").GetComponent<XRDirectInteractor>().enabled = false;
+                GameObject mainCamera = GameObject.Find("/Main Camera(Clone)");
+                mainCamera.transform.SetParent(rig.transform.Find("Camera Offset").transform);
+                mainCamera.GetComponent<Camera>().enabled = false;
+                mainCamera.transform.GetComponent<TrackedPoseDriver>().enabled = false;
+                mainCamera.transform.GetComponent<UniversalAdditionalCameraData>().enabled = false;
                 rig.gameObject.GetComponent<MasterController>().enabled = false;
             }
         }

@@ -21,7 +21,7 @@ public class QuizChoice: NetworkBehaviour
         else
         {
             wrong.Play();
-            // StartCoroutine(DisableChoice());
+            StartCoroutine(DisableChoice());
         }
         if (problemOne)
         {
@@ -46,17 +46,17 @@ public class QuizChoice: NetworkBehaviour
         }
     }
 
-    // IEnumerator DisableChoice()
-    // {
-    //     QuizChoice[] choices = FindObjectsOfType<QuizChoice>();
-    //     foreach (QuizChoice choice in choices)
-    //     {
-    //         choice.enabled = false;
-    //     }
-    //     yield return new WaitForSeconds(3);
-    //     foreach (QuizChoice choice in choices)
-    //     {
-    //         choice.enabled = true;
-    //     }
-    // }
+    IEnumerator DisableChoice()
+    {
+        QuizChoice[] choices = FindObjectsOfType<QuizChoice>();
+        foreach (QuizChoice choice in choices)
+        {
+            choice.enabled = false;
+        }
+        yield return new WaitForSeconds(3);
+        foreach (QuizChoice choice in choices)
+        {
+            choice.enabled = true;
+        }
+    }
 }

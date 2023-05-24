@@ -20,6 +20,7 @@ public class NetworkLauncher: NetworkManager
     private bool _firstAdd = true;
     public GameObject XRRightHand;
     public GameObject XRLeftHand;
+    public GameObject cameraPrefab;
 
     public override void Awake()
     {
@@ -57,17 +58,21 @@ public class NetworkLauncher: NetworkManager
         GameObject player = Instantiate(playerPrefab);
         GameObject leftHand = Instantiate(XRLeftHand);
         GameObject rightHand = Instantiate(XRRightHand);
+        GameObject mainCamera = Instantiate(cameraPrefab);
         leftHand.transform.parent = player.transform.Find("Camera Offset").transform;
         rightHand.transform.parent = player.transform.Find("Camera Offset").transform;
+        mainCamera.transform.parent = player.transform.Find("Camera Offset").transform;
         await SetupWatch(conn, player);
+        NetworkServer.Spawn(mainCamera);
+        NetworkIdentity identity = mainCamera.GetComponent<NetworkIdentity>();
+        identity.AssignClientAuthority(conn);
         NetworkServer.Spawn(rightHand);
-        NetworkIdentity identity = rightHand.GetComponent<NetworkIdentity>();
+        identity = rightHand.GetComponent<NetworkIdentity>();
         identity.AssignClientAuthority(conn);
         NetworkServer.Spawn(leftHand);
         identity = leftHand.GetComponent<NetworkIdentity>();
         identity.AssignClientAuthority(conn);
         
-        ;
         
         TeleportationProvider provider = player.GetComponentInChildren<TeleportationProvider>();
         GameObject[] teleports = TeleportationAnchors.Instance._teleports0;
@@ -149,9 +154,26 @@ public class NetworkLauncher: NetworkManager
                 leftHand = directInteractor.gameObject;
             }
         }
+
         Debug.Log("left hand!!!" + leftHand);
         rightHand.transform.parent = xrRig.transform.Find("Camera Offset").transform;
         leftHand.transform.parent = xrRig.transform.Find("Camera Offset").transform;
+        
+        DeviceBasedSnapTurnProvider snapTurnProvider = xrRig.GetComponentInChildren<DeviceBasedSnapTurnProvider>();
+        snapTurnProvider.controllers.Add(rightHand.GetComponent<XRController>()); 
+        snapTurnProvider.controllers.Add(leftHand.GetComponent<XRController>());
+        Debug.Log("add!");
+        
+        Camera[] cameras = GameObject.FindObjectsOfType<Camera>();
+        foreach (Camera mainCamera in cameras)
+        {
+            if (mainCamera.GetComponent<NetworkIdentity>().isOwned)
+            {
+                mainCamera.transform.parent = xrRig.transform.Find("Camera Offset").transform;
+            xrRig.GetComponent<XRRig>().cameraGameObject = mainCamera.gameObject; 
+                break;
+            }
+        }
 
         TeleportationProvider provider = xrRig.GetComponentInChildren<TeleportationProvider>();
         Log.Instance.CmdLog("provider: " + provider);

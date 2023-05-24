@@ -15,7 +15,7 @@ public class AddToNetwork: MonoBehaviour
         // XRRig.AddComponent<NetworkTransform>();
         // XRRig.transform.position = _pos;
         // NetworkLauncher.Instance.playerPrefab = XRRig;
-        XRRig.SetActive(false);
+        // XRRig.SetActive(false);
         NetworkLauncher.Instance.StartClient();
         /*SceneManager.LoadScene("EscapeRoom");
         SceneManager.UnloadSceneAsync("StartRoom");*/

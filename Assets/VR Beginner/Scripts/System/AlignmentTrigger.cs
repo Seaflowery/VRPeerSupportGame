@@ -73,6 +73,10 @@ public class AlignmentTrigger : MonoBehaviour
                     }
                     else
                     {
+                        if (master.Rig.cameraGameObject == null)
+                        {
+                            return;
+                        }
                         worldExternal =  master.Rig.cameraGameObject.transform.TransformVector(match.ExternalAxis);
                     }
                 }
