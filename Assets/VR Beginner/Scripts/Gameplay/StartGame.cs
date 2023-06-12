@@ -14,6 +14,7 @@ public class StartGame: MonoBehaviour
 
     IEnumerator PlayAudio()
     {
+        yield return new WaitForSeconds(5);
         audioSource.Play();
         yield return new WaitForSeconds(audioSource.clip.length);
         startButton.SetActive(true);

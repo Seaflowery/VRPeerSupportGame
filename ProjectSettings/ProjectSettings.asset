@@ -186,6 +186,7 @@ PlayerSettings:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  - {fileID: 0}
   - {fileID: -1539359631395895377, guid: 07a9ee58a0c074c428efff65c5a4f857, type: 2}
   - {fileID: -802529340814861761, guid: a422e2a2e6c83184e9b23d6413331359, type: 2}
   - {fileID: 11400000, guid: 398d945149746a94899cafbfeddf8c9f, type: 2}
@@ -844,11 +845,11 @@ PlayerSettings:
     m_VersionName: 
   apiCompatibilityLevel: 6
   activeInputHandler: 2
-  cloudProjectId: 
+  cloudProjectId: 6bbf63d4-4dd5-4247-aca7-5935a32708a0
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: 
-  organizationId: 
+  projectName: My project
+  organizationId: seaflowery
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
   virtualTexturingSupportEnabled: 0
