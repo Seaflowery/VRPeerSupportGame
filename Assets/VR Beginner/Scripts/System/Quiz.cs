@@ -13,11 +13,14 @@ public class Quiz: NetworkBehaviour
     public Texture2D[] answerTextures = new Texture2D[4];
     public Material questionMaterial;
     public Material answerMaterial;
+    public Texture2D initialMaterial;
     public static Quiz Instance;
 
     private void Awake()
     {
         Instance = this;
+        questionMaterial.mainTexture = initialMaterial;
+        questionMaterial.SetTexture("_EmissionMap", initialMaterial);
     }
 
     public void SetQuestionOne(bool one)

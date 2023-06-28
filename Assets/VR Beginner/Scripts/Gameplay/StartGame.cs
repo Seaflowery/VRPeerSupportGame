@@ -7,14 +7,13 @@ public class StartGame: MonoBehaviour
     public GameObject startPanel;
     public AudioSource audioSource;
 
-    public void Start()
+    public void OnPressStart()
     {
         StartCoroutine(PlayAudio());
     }
 
     IEnumerator PlayAudio()
     {
-        yield return new WaitForSeconds(5);
         audioSource.Play();
         yield return new WaitForSeconds(audioSource.clip.length);
         startButton.SetActive(true);

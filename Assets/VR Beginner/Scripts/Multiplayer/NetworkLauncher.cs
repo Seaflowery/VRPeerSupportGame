@@ -146,12 +146,12 @@ public class NetworkLauncher: NetworkManager
             if (directInteractor.gameObject.name == "XR LeftHand Controller(Clone)" &&
                 directInteractor.transform.GetComponent<NetworkIdentity>().isOwned)
             {
-                rightHand = directInteractor.gameObject;
+                leftHand = directInteractor.gameObject;
             }
             else if (directInteractor.gameObject.name == "XR RightHand Controller(Clone)" &&
                      directInteractor.transform.GetComponent<NetworkIdentity>().isOwned)
             {
-                leftHand = directInteractor.gameObject;
+                rightHand = directInteractor.gameObject;
             }
         }
 
@@ -170,7 +170,7 @@ public class NetworkLauncher: NetworkManager
             if (mainCamera.GetComponent<NetworkIdentity>().isOwned)
             {
                 mainCamera.transform.parent = xrRig.transform.Find("Camera Offset").transform;
-            xrRig.GetComponent<XRRig>().cameraGameObject = mainCamera.gameObject; 
+                xrRig.GetComponent<XRRig>().cameraGameObject = mainCamera.gameObject; 
                 break;
             }
         }
@@ -201,6 +201,9 @@ public class NetworkLauncher: NetworkManager
         CCManager.Instance.ServerStart();
         CCManager.Instance.serverStart = true; 
         masterController.CmdConnect();
+        MicrophoneManager microphoneManager = GameObject.FindObjectOfType<MicrophoneManager>();
+        microphoneManager.isConnected = true;
+        microphoneManager.controller = rightHand.GetComponent<XRController>();
     }
 
     public override void OnStopServer()
