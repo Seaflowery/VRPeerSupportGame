@@ -36,6 +36,7 @@ public class ButtonInteractable : MonoBehaviour
     {
         Vector3 worldAxis = transform.TransformDirection(Axis);
         Vector3 end = transform.position + worldAxis * MaxDistance;
+        Collider collidedCollider = null;
         
         float m_CurrentDistance = (transform.position - m_StartPosition).magnitude;
         RaycastHit info;
@@ -45,6 +46,7 @@ public class ButtonInteractable : MonoBehaviour
         if (m_Rigidbody.SweepTest(-worldAxis, out info, ReturnSpeed * Time.deltaTime + 0.005f))
         {//hitting something, if the contact is < mean we are pressed, move downward
             move = (ReturnSpeed * Time.deltaTime) - info.distance;
+            collidedCollider = info.collider;
         }
         else
         {
@@ -64,6 +66,10 @@ public class ButtonInteractable : MonoBehaviour
                 SourceID = -1,
                 Volume = 1.0f
             }, 0.0f);
+            Debug.Log("button pressed");
+            CauldronContent content = GameObject.FindObjectOfType<CauldronContent>();
+            if (content != null)
+                content.Brew(collidedCollider);
             OnButtonPressed.Invoke();
         }
         else if (m_Pressed && !Mathf.Approximately(newDistance, MaxDistance))

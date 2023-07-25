@@ -26,7 +26,7 @@ public class SynchronizeEvent: NetworkBehaviour
     void InvokeEvent(SelectEnterEventArgs evt)
     {
         AuthorityOnSelectedEnter.Invoke(evt);
-        OnSelectedEnter.Invoke(evt);
+        // OnSelectedEnter.Invoke(evt);
         if (!isServer)
             CmdInvoke(evt);
     }
@@ -34,7 +34,7 @@ public class SynchronizeEvent: NetworkBehaviour
     [Command(requiresAuthority = false)]
     void CmdInvoke(SelectEnterEventArgs evt)
     {
-        Debug.Log("book of spell invoke???");
+        // Debug.Log("book of spell invoke???");
         OnSelectedEnter.Invoke(evt);
         ServerEvent.Invoke(evt);
         RpcInvoke(evt);

@@ -2,7 +2,7 @@
 using Mirror;
 using UnityEngine;
 
-public class ObjectLauncher : NetworkBehaviour
+public class ObjectLauncher : MonoBehaviour
 {
     public Transform SpawnPoint;
     public ProjectileBase ObjectToSpawn;

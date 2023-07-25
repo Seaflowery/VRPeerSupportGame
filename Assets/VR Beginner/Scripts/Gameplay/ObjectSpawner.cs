@@ -27,18 +27,20 @@ public class ObjectSpawner : NetworkBehaviour
 
     public void Spawn()
     {
-        var newInst = Instantiate(Prefab, SpawnPoint.position, SpawnPoint.rotation);
         if (isServer)
+        {
+            var newInst = Instantiate(Prefab, SpawnPoint.position, SpawnPoint.rotation);
             NetworkServer.Spawn(newInst);
 
-        if (m_Instances.Count >= MaxInstances)
-        {
-            Destroy(m_Instances[0]);
-            m_Instances.RemoveAt(0);
+            if (m_Instances.Count >= MaxInstances)
+            {
+                Destroy(m_Instances[0]);
+                m_Instances.RemoveAt(0);
+            }
+
+            SpawnEffect.SendEvent("SingleBurst");
+            m_Instances.Add(newInst);
         }
-        
-        SpawnEffect.SendEvent("SingleBurst");
-        m_Instances.Add(newInst);
     }
 
     void Update()

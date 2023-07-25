@@ -13,6 +13,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Animator: {fileID: 658456156653732946}
+--- !u!65 &2857697382826562644
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5904804582164372283}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.1, y: 0.1, z: 0.1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &2509623667849085490
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -25,6 +38,11 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: 7cf02af9f0ce10847b79ab023e110182, type: 2}
+    - target: {fileID: -4216859302048453862, guid: 1f5a20cf402ae624e969edbaf519daf6,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 1f5a20cf402ae624e969edbaf519daf6,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -42,6 +60,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 1f5a20cf402ae624e969edbaf519daf6,
         type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -4216859302048453862, guid: 1f5a20cf402ae624e969edbaf519daf6,
+        type: 3}
       propertyPath: m_LocalRotation.x
       value: 0
       objectReference: {fileID: 0}
@@ -53,16 +76,6 @@ PrefabInstance:
     - target: {fileID: -4216859302048453862, guid: 1f5a20cf402ae624e969edbaf519daf6,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -4216859302048453862, guid: 1f5a20cf402ae624e969edbaf519daf6,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: -4216859302048453862, guid: 1f5a20cf402ae624e969edbaf519daf6,
-        type: 3}
-      propertyPath: m_RootOrder
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 1f5a20cf402ae624e969edbaf519daf6,

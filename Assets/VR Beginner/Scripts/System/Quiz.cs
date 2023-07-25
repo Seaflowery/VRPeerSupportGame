@@ -19,8 +19,8 @@ public class Quiz: NetworkBehaviour
     private void Awake()
     {
         Instance = this;
-        questionMaterial.mainTexture = initialMaterial;
-        questionMaterial.SetTexture("_EmissionMap", initialMaterial);
+        answerMaterial.mainTexture = initialMaterial;
+        answerMaterial.SetTexture("_EmissionMap", initialMaterial);
     }
 
     public void SetQuestionOne(bool one)
@@ -31,9 +31,9 @@ public class Quiz: NetworkBehaviour
     private void PrepareQuestions(int round)
     {
         // select quiz questions and get right answer 
-        if (!questionOne)
+        if (questionOne)
         {
-            rightAns = (round == 0) ? 1 : 3;
+            rightAns = (round == 0) ? 2 : 2;
             int seq = (round == 0) ? 1 : 3;
             questionMaterial.mainTexture = questionTextures[seq];
             questionMaterial.SetTexture("_EmissionMap", questionTextures[seq]);
@@ -41,7 +41,7 @@ public class Quiz: NetworkBehaviour
         }
         else
         {
-            rightAns = (round == 0) ? 1 : 2;
+            rightAns = (round == 0) ? 3 : 1;
             int seq = (round == 0) ? 0 : 2;
             questionMaterial.mainTexture = questionTextures[seq];
             questionMaterial.SetTexture("_EmissionMap", questionTextures[seq]);
@@ -63,8 +63,29 @@ public class Quiz: NetworkBehaviour
                 choice.roundOne = (round == 0);
                 choice.problemOne = questionOne;
             }
+            if (isServer)
+                Debug.Log("Notify server");
+            else
+            {
+                Log.Instance.CmdLog("Notify client");
+            }
+            // if (!isServer)
+            //     Log.Instance.CmdLog(choice.name + " " + choice.rightAns);
         }
         // CmdLog("all notified");
+    }
+
+    [Command(requiresAuthority = false)]
+    public void CmdNotify(int round)
+    {
+        NotifyRightAns(round);
+        RpcNotify(round);
+    }
+    
+    [ClientRpc]
+    void RpcNotify(int round)
+    {
+        NotifyRightAns(round);
     }
 
 }

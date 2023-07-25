@@ -53,6 +53,7 @@ public class NetworkLauncher: NetworkManager
 
     public override async void OnServerAddPlayer(NetworkConnectionToClient conn)
     {
+        TeleportationAnchors.Instance.playerNum++;
         Debug.Log("add player");
         // Assign authority to client for all networked objects spawned on the server
         GameObject player = Instantiate(playerPrefab);
@@ -76,7 +77,7 @@ public class NetworkLauncher: NetworkManager
         
         TeleportationProvider provider = player.GetComponentInChildren<TeleportationProvider>();
         GameObject[] teleports = TeleportationAnchors.Instance._teleports0;
-        if (numPlayers == 2)
+        if (numPlayers == 1)
         {
             teleports = TeleportationAnchors.Instance._teleports1;
         }
@@ -137,7 +138,7 @@ public class NetworkLauncher: NetworkManager
             }
         }
         xrRig.name = "Original XR Rig";
-        Debug.Log("xr rig: " + xrRig);
+        // Debug.Log("xr rig: " + xrRig);
         XRDirectInteractor[] directInteractors = GameObject.FindObjectsOfType<XRDirectInteractor>();
         GameObject rightHand = null;
         GameObject leftHand = null;
@@ -155,14 +156,14 @@ public class NetworkLauncher: NetworkManager
             }
         }
 
-        Debug.Log("left hand!!!" + leftHand);
+        // Debug.Log("left hand!!!" + leftHand);
         rightHand.transform.parent = xrRig.transform.Find("Camera Offset").transform;
         leftHand.transform.parent = xrRig.transform.Find("Camera Offset").transform;
         
         DeviceBasedSnapTurnProvider snapTurnProvider = xrRig.GetComponentInChildren<DeviceBasedSnapTurnProvider>();
         snapTurnProvider.controllers.Add(rightHand.GetComponent<XRController>()); 
         snapTurnProvider.controllers.Add(leftHand.GetComponent<XRController>());
-        Debug.Log("add!");
+        // Debug.Log("add!");
         
         Camera[] cameras = GameObject.FindObjectsOfType<Camera>();
         foreach (Camera mainCamera in cameras)
@@ -176,8 +177,10 @@ public class NetworkLauncher: NetworkManager
         }
 
         TeleportationProvider provider = xrRig.GetComponentInChildren<TeleportationProvider>();
-        Log.Instance.CmdLog("provider: " + provider);
+        // Log.Instance.CmdLog("provider: " + provider);
         GameObject[] teleports = TeleportationAnchors.Instance._teleports0;
+        Debug.Log("current num: " + TeleportationAnchors.Instance.playerNum);
+        num = TeleportationAnchors.Instance.playerNum;
         if (num == 2)
         {
             teleports = TeleportationAnchors.Instance._teleports1;

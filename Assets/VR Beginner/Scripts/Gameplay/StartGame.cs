@@ -7,7 +7,7 @@ public class StartGame: MonoBehaviour
     public GameObject startPanel;
     public AudioSource audioSource;
 
-    public void OnPressStart()
+    public void OnCollision()
     {
         StartCoroutine(PlayAudio());
     }
@@ -18,5 +18,5 @@ public class StartGame: MonoBehaviour
         yield return new WaitForSeconds(audioSource.clip.length);
         startButton.SetActive(true);
         startPanel.SetActive(true);
-    }
+    } 
 }

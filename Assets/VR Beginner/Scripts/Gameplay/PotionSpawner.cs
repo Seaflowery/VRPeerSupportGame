@@ -18,6 +18,7 @@ public class PotionSpawner : NetworkBehaviour
 
     public void PotionBrewed(CauldronContent.Recipe recipe)
     {
+        Debug.Log("spawn potion");
         if (recipe != null)
         {
             SpawnerCorrect.Prefab = PotionPrefab;

@@ -70,7 +70,7 @@ public class CCManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (serverStart)
+        if (serverStart && m_Camera != null)
         {
             Vector3 cameraPosition = m_Camera.transform.position;
             Vector3 cameraForward = m_Camera.transform.forward;

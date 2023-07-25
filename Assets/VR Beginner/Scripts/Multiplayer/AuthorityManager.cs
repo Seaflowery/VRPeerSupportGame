@@ -32,7 +32,7 @@ public class AuthorityManager: NetworkBehaviour
     [Command(requiresAuthority = false)]
     private void CmdAuthorize(NetworkIdentity identity, NetworkConnectionToClient sender = null)
     { 
-        Debug.Log(identity.name + " is being authorized");
+        // Debug.Log(identity.name + " is being authorized");
         identity.RemoveClientAuthority();
         identity.AssignClientAuthority(sender);
     }

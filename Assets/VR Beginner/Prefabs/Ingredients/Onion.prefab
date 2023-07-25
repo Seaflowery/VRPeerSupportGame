@@ -125,7 +125,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 4752290751082855764}
-        m_TargetAssemblyTypeName: 
+        m_TargetAssemblyTypeName: SelectionOutline, Assembly-CSharp
         m_MethodName: Highlight
         m_Mode: 1
         m_Arguments:
@@ -256,6 +256,7 @@ MonoBehaviour:
   m_ThrowAngularVelocityScale: 0.25
   m_ForceGravityOnDetach: 0
   m_RetainTransformParent: 1
+  m_AttachPointCompatibilityMode: 0
 --- !u!64 &4510934439634853168
 MeshCollider:
   m_ObjectHideFlags: 0

@@ -20,7 +20,7 @@ public class DancingManager: NetworkBehaviour
     public GameObject fireplaceAnchor;
     public GameObject startButton;
     private Timer _countdownTimer = new Timer(1);
-    private Timer _magicTimer = new Timer(1.5F);
+    private Timer _magicTimer = new Timer(2F);
     private int totalNum;
     private int hitNum;
     int pointNum = 0;
@@ -99,7 +99,7 @@ public class DancingManager: NetworkBehaviour
     {
         // if (!isServer)
         //     CmdHitGhost();
-        --hitNum;
+        // --hitNum;
         if (isServer)
             Debug.Log("hit num: " + hitNum);
     }

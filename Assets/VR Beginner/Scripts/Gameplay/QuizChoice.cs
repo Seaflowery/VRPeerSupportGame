@@ -16,12 +16,27 @@ public class QuizChoice: NetworkBehaviour
 
     public void OnTriggerChoose()
     {
-        if (rightAns) 
+        Debug.Log("choose");
+        if (rightAns)
+        {
             right.Play();
+            if (!isServer)
+                Log.Instance.CmdLog("client right");
+            else
+            {
+                Debug.Log("server right");
+            }
+        }
         else
         {
             wrong.Play();
             StartCoroutine(DisableChoice());
+            if (!isServer)
+                Log.Instance.CmdLog("client wrong");
+            else
+            {
+                Debug.Log("server wrong");
+            }
         }
         if (problemOne)
         {
@@ -45,13 +60,24 @@ public class QuizChoice: NetworkBehaviour
             }    
         }
     }
+    
+    // [Command(requiresAuthority = false)]
+    // void NotifyRightAns()
+    // {
+    //     Quiz.Instance.questionOne = false;
+    //     Quiz.Instance.NotifyRightAns(roundOne ? 0:1);
+    // }
 
     IEnumerator DisableChoice()
     {
         QuizChoice[] choices = FindObjectsOfType<QuizChoice>();
+        Debug.Log("length: " + choices.Length);
         foreach (QuizChoice choice in choices)
         {
-            choice.enabled = false;
+            if (choice != this)
+            {
+                choice.enabled = false;
+            }
         }
         yield return new WaitForSeconds(3);
         foreach (QuizChoice choice in choices)

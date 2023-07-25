@@ -54,8 +54,12 @@ public class Potion : MonoBehaviour
         m_RbPotion = GetComponent<Rigidbody>();
 
         m_StartingFillAmount = fillAmount;
-
-        m_Breakable = true;
+        if (PotionType == "Unlocker")
+            m_Breakable = false;
+        else
+        {
+            m_Breakable = true;
+        }
     }
 
     void Start()

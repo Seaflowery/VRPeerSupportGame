@@ -5,6 +5,7 @@ using Mirror;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.VFX;
+using UnityEngine.XR.Interaction.Toolkit;
 using Random = UnityEngine.Random;
 
 /// <summary>
@@ -53,6 +54,7 @@ public class CauldronContent : NetworkBehaviour
     float m_StartingVolume;
     
     private CauldronEffects m_CauldronEffect;
+    // private DateTime _date;
 
     private void Start()
     {
@@ -61,6 +63,7 @@ public class CauldronContent : NetworkBehaviour
 
         m_StartingVolume = AmbientSoundSource.volume;
         AmbientSoundSource.volume = m_StartingVolume * 0.2f;
+        // _date = DateTime.Now;
     }
 
     void OnTriggerEnter(Collider other)
@@ -87,34 +90,37 @@ public class CauldronContent : NetworkBehaviour
 
         splashVFX.Play();
 
-        CauldronIngredient ingredient = collide.GetComponent<CauldronIngredient>();
+        if (collide != null && collide.GetComponent<CauldronIngredient>() != null)
+        {
+            CauldronIngredient ingredient = collide.GetComponent<CauldronIngredient>();
 
-        RespawnableObject respawnableObject = ingredient;
-        if (ingredient != null)
-        {
-            m_CurrentIngredientsIn.Add(ingredient.IngredientType);
-            Debug.Log("ingredient " + ingredient.IngredientType + " added to the cauldron");
-        }
-        else
-        {
-            //added an object that is not an ingredient, it will make automatically fail any recipe
-            m_CurrentIngredientsIn.Add("INVALID");
-            respawnableObject = collide.GetComponent<RespawnableObject>();
-        }
+            RespawnableObject respawnableObject = ingredient;
+            if (ingredient != null)
+            {
+                m_CurrentIngredientsIn.Add(ingredient.IngredientType);
+                Debug.Log("ingredient " + ingredient.IngredientType + " added to the cauldron");
+            }
+            else
+            {
+                //added an object that is not an ingredient, it will make automatically fail any recipe
+                m_CurrentIngredientsIn.Add("INVALID");
+                respawnableObject = collide.GetComponent<RespawnableObject>();
+            }
 
-        if (respawnableObject != null)
-        {
-            respawnableObject.Respawn();
+            if (respawnableObject != null)
+            {
+                respawnableObject.Respawn();
+            }
+            else
+            {
+                Destroy(collide, 0.5f);
+            }
         }
-        else
-        {
-            Destroy(collide, 0.5f);
-        } 
     }
 
     public void ChangeTemperature(int step)
     {
-        Log.Instance.CmdLog("change temperature!");
+        // Log.Instance.CmdLog("change temperature!");
         CmdChangeTemperature(step);
         m_CauldronEffect.SetBubbleIntensity(step);
     }
@@ -124,7 +130,7 @@ public class CauldronContent : NetworkBehaviour
     {
         m_Temperature = TemperatureIncrement * step;
         m_CauldronEffect.SetBubbleIntensity(step);
-        Debug.Log("Temperature changed to " + m_Temperature);
+        // Debug.Log("Temperature changed to " + m_Temperature);
     }
 
     public void ChangeRotation(int step)
@@ -141,18 +147,33 @@ public class CauldronContent : NetworkBehaviour
         Debug.Log("Rotation changed to " + m_Rotation);
     }
 
-    public void Brew()
+    public void Brew(Collider other)
     {
-        if (!isServer)
-            CmdBrew();
+        // DateTime currentTime = DateTime.Now;
+        // if (!isServer)
+        //     Log.Instance.CmdLog(NetworkClient.connection.ToString());
+            // Log.Instance.CmdLog("current: " + currentTime + " previous: " + _date + " difference: " + (currentTime - _date).TotalSeconds);
+
+        if (!isServer && other != null)
+        {
+            Log.Instance.CmdLog(other.name);
+
+            XRRig xrRig = other.GetComponentInParent<XRRig>();
+            Log.Instance.CmdLog("is local player: " + xrRig.GetComponent<NetworkIdentity>().isLocalPlayer);
+            if (xrRig != null && xrRig.GetComponent<NetworkIdentity>().isLocalPlayer)
+                // _date = currentTime;
+                CmdBrew();
+        }
+
         // StartCoroutine(SetAnimation());
     }
     
     [Command(requiresAuthority = false)]
     void CmdBrew()
     {
-        brewEffect.SendEvent("StartLongSpawn");
-        CauldronAnimator.SetTrigger("Brew");
+        Debug.Log("brewing!");
+        // brewEffect.SendEvent("StartLongSpawn");
+        // CauldronAnimator.SetTrigger("Brew");
         
         Recipe recipeBewed = null;
         foreach (Recipe recipe in Recipes)
@@ -186,17 +207,17 @@ public class CauldronContent : NetworkBehaviour
 
     IEnumerator WaitForBrewCoroutine(Recipe recipe)
     {
-        BrewingSoundSource.Play();
-        AmbientSoundSource.volume = m_StartingVolume * 0.2f;
+        // BrewingSoundSource.Play();
+        // AmbientSoundSource.volume = m_StartingVolume * 0.2f;
         m_CanBrew = false;
         yield return new WaitForSeconds(3.0f);
-        brewEffect.SendEvent("EndLongSpawn");
-        CauldronAnimator.SetTrigger("Open");
-        BrewingSoundSource.Stop();
+        // brewEffect.SendEvent("EndLongSpawn");
+        // CauldronAnimator.SetTrigger("Open");
+        // BrewingSoundSource.Stop();
         
         OnBrew.Invoke(recipe);
         m_CanBrew = true;
-        AmbientSoundSource.volume = m_StartingVolume;
+        // AmbientSoundSource.volume = m_StartingVolume;
     }
     
     [ClientRpc]
